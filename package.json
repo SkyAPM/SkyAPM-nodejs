@@ -1,0 +1,38 @@
+{
+  "name": "skywalking-nodejs",
+  "version": "0.1.0",
+  "description": "The Node server instrument SDK for Apache SkyWalking",
+  "main": "index.js",
+  "scripts": {
+    "prepare": "require-self"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OpenSkywalking/skywalking-nodejs.git"
+  },
+  "keywords": [
+    "Skywalking",
+    "Trace"
+  ],
+  "contributors": [
+    {
+      "name": "Xin Zhang",
+      "email": "zhangxin@apache.org",
+      "url": "https://github.com/ascrutae"
+    }
+  ],
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/OpenSkywalking/skywalking-nodejs/issues"
+  },
+  "homepage": "https://github.com/OpenSkywalking/skywalking-nodejs#readme",
+  "dependencies": {
+    "debug": "^3.1.0",
+    "end-of-stream": "^1.4.1"
+  },
+  "devDependencies": {
+    "mysql": "^2.15.0",
+    "require-self": "^0.2.1",
+    "semver": "^5.5.0"
+  }
+}

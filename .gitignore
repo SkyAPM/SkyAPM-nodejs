@@ -57,3 +57,8 @@ typings/
 # dotenv environment variables file
 .env
 
+npm-debug.log
+.DS_Store
+.idea/
+
+package-lock.json
