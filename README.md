@@ -1,2 +1,2 @@
-# skywalking-nodejs
-The Node server instrument SDK for Apache SkyWalking
+# skywalking-nodejs [WIP]
+The NodeJS instrument SDK for Apache SkyWalking
