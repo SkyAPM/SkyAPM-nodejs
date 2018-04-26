@@ -14,22 +14,3 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-module.exports = OperationNameDictionary;
-
-/**
- * @author zhang xin
- */
-function OperationNameDictionary() {
-  this._registerOperationNames = {};
-  this._unregisterOperationNames = [];
-}
-
-OperationNameDictionary.prototype.find = function(operationName, callback) {
-  if (!this._registerOperationNames.hasOwnProperty(operationName)) {
-    this._unregisterOperationNames.push(operationName);
-    return callback("operationName", operationName);
-  }
-
-  return callback("operationId", this._registerOperationNames[operationName]);
-};
