@@ -4,7 +4,8 @@
   "description": "The Node server instrument SDK for Apache SkyWalking",
   "main": "index.js",
   "scripts": {
-    "prepare": "require-self"
+    "prepare": "require-self",
+    "check": "eslint lib/ && eslint index.js"
   },
   "repository": {
     "type": "git",
@@ -12,6 +13,7 @@
   },
   "keywords": [
     "Skywalking",
+    "APM",
     "Trace"
   ],
   "contributors": [
@@ -31,6 +33,9 @@
     "end-of-stream": "^1.4.1"
   },
   "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-config-google": "^0.9.1",
+    "eslint-plugin-header": "^1.2.0",
     "mysql": "^2.15.0",
     "require-self": "^0.2.1",
     "semver": "^5.5.0"

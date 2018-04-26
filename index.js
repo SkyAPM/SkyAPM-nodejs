@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-'use strict'
+"use strict";
 
-var Agent = require("./lib/agent")
+const Agent = require("./lib/agent");
 
 /**
  * @author zhang xin
