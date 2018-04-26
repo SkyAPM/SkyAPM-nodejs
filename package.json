@@ -4,7 +4,10 @@
   "description": "The Node server instrument SDK for Apache SkyWalking",
   "main": "index.js",
   "scripts": {
-    "prepare": "require-self",
+    "prepare": "require-self && npm run generate-source",
+    "generate-source": "run-script-os",
+    "generate-source:win32": "rd lib/network && md lib/network && cd proto && grpc_tools_node_protoc --js_out=import_style=commonjs,binary:../lib/network/ --grpc_out=../lib/network/ *.proto",
+    "generate-source:darwin:linux": "rm -rf lib/network && mkdir -p lib/network && cd proto && grpc_tools_node_protoc --js_out=import_style=commonjs,binary:../lib/network/ --grpc_out=../lib/network/ *.proto",
     "check": "eslint lib/ && eslint index.js"
   },
   "repository": {
@@ -30,14 +33,18 @@
   "homepage": "https://github.com/OpenSkywalking/skywalking-nodejs#readme",
   "dependencies": {
     "debug": "^3.1.0",
-    "end-of-stream": "^1.4.1"
+    "end-of-stream": "^1.4.1",
+    "grpc": "^1.10.1"
   },
   "devDependencies": {
     "eslint": "^4.19.1",
     "eslint-config-google": "^0.9.1",
     "eslint-plugin-header": "^1.2.0",
+    "grpc-tools": "^1.6.6",
     "mysql": "^2.15.0",
     "require-self": "^0.2.1",
+    "run-script-os": "^1.0.3",
     "semver": "^5.5.0"
-  }
+  },
+  "eslintIgnore": ["lib/network/*.js"]
 }
