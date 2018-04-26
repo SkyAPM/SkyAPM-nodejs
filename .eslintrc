@@ -23,7 +23,8 @@
       "copyright.js"
     ],
     "no-invalid-this": "off",
-    "prefer-rest-params": "off"
+    "prefer-rest-params": "off",
+    "prefer-spread": "off"
   },
   "parserOptions": {
     "ecmaVersion": 6
