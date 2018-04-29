@@ -32,9 +32,12 @@
   },
   "homepage": "https://github.com/OpenSkywalking/skywalking-nodejs#readme",
   "dependencies": {
+    "async": "^2.6.0",
     "debug": "^3.1.0",
     "end-of-stream": "^1.4.1",
-    "grpc": "^1.10.1"
+    "google-protobuf": "^3.5.0",
+    "grpc": "^1.10.1",
+    "uuid": "^3.2.1"
   },
   "devDependencies": {
     "eslint": "^4.19.1",
@@ -46,5 +49,7 @@
     "run-script-os": "^1.0.3",
     "semver": "^5.5.0"
   },
-  "eslintIgnore": ["lib/network/*.js"]
+  "eslintIgnore": [
+    "lib/network/*.js"
+  ]
 }
