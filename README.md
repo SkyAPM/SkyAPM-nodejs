@@ -1,8 +1,8 @@
-# skywalking-nodejs
+# SkyWalking Node.js
 
 <img src="https://skywalkingtest.github.io/page-resources/3.0/skywalking.png" alt="Sky Walking logo" height="90px" align="right" />
 
-skywalking-nodejs is the Node.js agent for [Apache SkyWalking(Incubating) APM](https://github.com/apache/incubator-skywalking).
+SkyWalking Node.js is the Node.js instrumentation agent, which is compatible with [Apache SkyWalking(Incubating) APM](https://github.com/apache/incubator-skywalking) backend and others compatible agents/SDKs.
 
 [![Build Status](https://travis-ci.org/OpenSkywalking/skywalking-nodejs.svg?branch=master)](https://travis-ci.org/OpenSkywalking/skywalking-nodejs)
 
@@ -28,8 +28,11 @@ require('skywalking-nodejs').start({
 });
 ```
 
-## Contribution
-Welcome and highly value any suggestion. Join our [gitter room](https://gitter.im/openskywalking/Lobby).
+# Contact Us
+* Submit an issue
+* Mail list: dev@skywalking.apache.org
+* [Gitter](https://gitter.im/openskywalking/Lobby)
+* QQ Group: 392443393
 
 ## License
 [Apache 2.0](LICENSE.md)
