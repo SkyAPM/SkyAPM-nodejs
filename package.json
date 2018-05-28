@@ -4,6 +4,7 @@
   "description": "The Node server instrument SDK for Apache SkyWalking",
   "main": "index.js",
   "scripts": {
+    "prepublish": "npm run check && npm run generate-source",
     "prepare": "require-self && npm run generate-source",
     "generate-source": "run-script-os",
     "generate-source:win32": "rd lib/network && md lib/network && cd proto && grpc_tools_node_protoc --js_out=import_style=commonjs,binary:../lib/network/ --grpc_out=../lib/network/ *.proto",
