@@ -10,7 +10,7 @@ SkyWalking Node.js is the Node.js instrumentation agent, which is compatible wit
 
 ### Installation
 Add the skywalking-nodejs module as a dependency to your application:
-> npm install skywalking-nodejs --save
+> npm install skywalking-nodejs@latest --save
 
 ### Initialization
 It’s important that the agent is started before you require any other modules in your Node.js application. and you should
