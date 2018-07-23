@@ -28,6 +28,10 @@ require('skywalking-nodejs').start({
 });
 ```
 
+## Support List
+1. Http
+2. Mysql
+
 # Contact Us
 * Submit an issue
 * Mail list: dev@skywalking.apache.org
