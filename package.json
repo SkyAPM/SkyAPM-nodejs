@@ -50,7 +50,7 @@
     "mysql": "^2.15.0",
     "require-self": "^0.2.1",
     "run-script-os": "^1.0.3",
-    "semver": "^5.5.0"
+    "semver": "^5.5.1"
   },
   "eslintIgnore": [
     "lib/network/*.js"
