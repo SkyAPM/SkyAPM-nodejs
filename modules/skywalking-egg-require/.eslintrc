@@ -1,0 +1,32 @@
+{
+  "extends": "google",
+  "plugins": [
+    "header"
+  ],
+  "rules": {
+    "semi": [
+      "error",
+      "always"
+    ],
+    "quotes": [
+      "error",
+      "double"
+    ],
+    "max-len": [
+      "error",
+      {
+        "code": 120
+      }
+    ],
+    "header/header": [
+      "error",
+      "copyright.js"
+    ],
+    "no-invalid-this": "off",
+    "prefer-rest-params": "off",
+    "prefer-spread": "off"
+  },
+  "parserOptions": {
+    "ecmaVersion": 2017
+  }
+}
