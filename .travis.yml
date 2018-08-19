@@ -10,4 +10,4 @@ cache:
   directories:
     - "node_modules"
 
-script: cd modules/nodejs-agent && npm run check
+script: cd modules/nodejs-agent && npm install && npm run check
