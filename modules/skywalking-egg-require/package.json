@@ -1,0 +1,38 @@
+{
+  "name": "skywalking-egg-require",
+  "version": "0.1.0",
+  "description": "The require module that Skywalking nodejs agent enhance the egg framework",
+  "main": "index.js",
+  "scripts": {
+    "check": "eslint index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OpenSkywalking/skywalking-nodejs.git"
+  },
+  "keywords": [
+    "skywalking",
+    "egg"
+  ],
+  "contributors": [
+    {
+      "name": "Xin Zhang",
+      "email": "zhangxin@apache.org",
+      "url": "https://github.com/ascrutae"
+    }
+  ],
+  "author": "Zhang Xin",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/OpenSkywalking/skywalking-nodejs/issues"
+  },
+  "homepage": "https://github.com/OpenSkywalking/skywalking-nodejs#readme",
+  "dependencies": {
+    "skywalking-nodejs": "^0.1.2"
+  },
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-config-google": "^0.9.1",
+    "eslint-plugin-header": "^1.2.0"
+  }
+}
