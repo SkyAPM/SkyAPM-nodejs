@@ -28,8 +28,8 @@ require('skywalking-nodejs').start({
 });
 ```
 
-### Download and deploy skywalking backend in standalone mode.[Doc](https://github.com/apache/incubator-skywalking/blob/master/docs/en/Deploy-backend-in-standalone-mode.md)
-It's very important that nodejs agent and Skywalking backbend that your download should be compatible. Please see [the document](docs/capatibility-list.md)
+### Download and deploy skywalking backend.
+It's very important that nodejs agent and Skywalking backbend that your download should be compatible. Please see [the document](docs/capatibility-list.md) and Here is the [deploy skywalking backend documents](https://github.com/apache/incubator-skywalking/blob/master/docs/en/Deploy-backend-in-standalone-mode.md)
 
 ### Reboot application
 After Reboot your application and now your application has been monitored.
