@@ -28,13 +28,21 @@ require('skywalking-nodejs').start({
 });
 ```
 
+### Download and deploy skywalking backend in standalone mode.[Doc](https://github.com/apache/incubator-skywalking/blob/master/docs/en/Deploy-backend-in-standalone-mode.md)
+It's very important that nodejs agent and Skywalking backbend that your download should be compatible. Please see [the document](docs/capatibility-list.md)
+
+### Reboot application
+After Reboot your application and now your application has been monitored.
+
+
+## Documents
+* [Document in English](docs/README.md)
+
 ## Support List
 1. [Http](https://nodejs.org/api/http.html)
 2. [Mysql](https://github.com/mysqljs/mysql)
 3. [Egg](https://github.com/eggjs/egg)
 
-## FAQ
-1. [How to deploy agent in egg framework](docs/FAQ/how-to-deploy-agent-in-egg-framwork.md)
 
 # Contact Us
 * Submit an issue
