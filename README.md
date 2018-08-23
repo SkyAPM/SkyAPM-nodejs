@@ -29,8 +29,12 @@ require('skywalking-nodejs').start({
 ```
 
 ## Support List
-1. Http
-2. Mysql
+1. [Http](https://nodejs.org/api/http.html)
+2. [Mysql](https://github.com/mysqljs/mysql)
+3. [Egg](https://github.com/eggjs/egg)
+
+## FAQ
+1. [How to deploy agent in egg framework](docs/FAQ/how-to-deploy-agent-in-egg-framwork.md)
 
 # Contact Us
 * Submit an issue
