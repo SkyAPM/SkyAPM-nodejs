@@ -29,6 +29,8 @@
 const loadProperty = require("./constants").PROPERTY_FIELD;
 const activeContext = require("../constants").ACTIVE_CONTEXT;
 const functionArguments = require("function-arguments");
+const layerDefine = require("../../trace/span-layer");
+const componentDefine = require("../../trace/component-define");
 
 module.exports = function(fileLoaderModule, instrumentation, contextManager) {
     instrumentation.enhanceMethod(fileLoaderModule.prototype, "parse", wrapParse);
@@ -79,7 +81,11 @@ module.exports = function(fileLoaderModule, instrumentation, contextManager) {
             let runningSpan = this.request.ctx[activeContext].span();
             try {
                 let requestURL = this.request.ctx._matchedRoute;
-                contextManager.rewriteOperationName(runningSpan, requestURL);
+                contextManager.rewriteSpanInfo(runningSpan, {
+                    "operationName": requestURL,
+                    "component": componentDefine.Components.EGG,
+                    "spanLayer": layerDefine.Layers.HTTP,
+                });
                 ret = origin.apply(this, arguments);
             } catch (e) {
                 runningSpan.errorOccurred();
