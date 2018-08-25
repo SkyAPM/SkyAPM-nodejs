@@ -8,6 +8,10 @@ SkyWalking Node.js is the Node.js instrumentation agent, which is compatible wit
 
 ## Quick Start
 
+Before you do this. you should make sure the Skywalking backben has been installed. Please read the these documents.
+* [Deploy skywalking backend in standalone mode](https://github.com/apache/incubator-skywalking/blob/master/docs/en/Deploy-backend-in-standalone-mode.md)
+* [Deploy skywalking backend in cluster mode](https://github.com/apache/incubator-skywalking/blob/master/docs/en/Deploy-backend-in-cluster-mode.md)
+
 ### Installation
 Add the skywalking-nodejs module as a dependency to your application:
 > npm install skywalking-nodejs@latest --save
@@ -27,9 +31,6 @@ require('skywalking-nodejs').start({
     directServers: 'localhost:11800'
 });
 ```
-
-### Download and deploy skywalking backend.
-It's very important that nodejs agent and Skywalking backbend that your download should be compatible. Please see [the document](docs/capatibility-list.md) and Skywalking provide two deploy mode, one is [standalone mode](https://github.com/apache/incubator-skywalking/blob/master/docs/en/Deploy-backend-in-standalone-mode.md) and the other is [cluster mode](https://github.com/apache/incubator-skywalking/blob/master/docs/en/Deploy-backend-in-cluster-mode.md)
 
 ### Reboot application
 After Reboot your application and now your application has been monitored.
