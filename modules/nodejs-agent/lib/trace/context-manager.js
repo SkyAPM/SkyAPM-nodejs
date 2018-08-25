@@ -160,3 +160,14 @@ ContextManager.prototype.rewriteOperationName = function(span, operationName) {
             }
         });
 };
+
+ContextManager.prototype.rewriteSpanInfo = function(span, spanInfo) {
+    let self = this;
+    Object.keys(spanInfo).forEach(function(property) {
+        if (property == "operationName") {
+            self.rewriteOperationName(span, spanInfo[property]);
+        } else {
+            span[property](spanInfo[property]);
+        }
+    });
+};
