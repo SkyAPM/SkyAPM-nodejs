@@ -19,5 +19,4 @@ require('skywalking-nodejs').start({
     directServers: 'localhost:11800'
 });
 
-
-*NOTE*: If your application is development with egg framework. please ref [deploy agent in egg framework](how-to-deploy-agent-in-egg-framework.md).
+*NOTE*: If your application is using egg framework. please read the [deploy agent in egg framework](how-to-deploy-agent-in-egg-framework.md).
