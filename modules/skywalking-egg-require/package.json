@@ -1,6 +1,6 @@
 {
   "name": "skywalking-egg-require",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "The require module that Skywalking nodejs agent enhance the egg framework",
   "main": "index.js",
   "scripts": {
@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/OpenSkywalking/skywalking-nodejs#readme",
   "dependencies": {
-    "skywalking-nodejs": "^0.1.2"
+    "skywalking-nodejs": "^0.3.0"
   },
   "devDependencies": {
     "eslint": "^4.19.1",
