@@ -37,7 +37,7 @@ Layer.prototype.getGrpcData = function() {
 };
 
 let Layers = function() {
-  this.DB = new Layer(1, TraceSegmentServiceParameters.SpanLayer.Database);
+  this.DB = new Layer(1, TraceSegmentServiceParameters.SpanLayer.DATABASE);
   this.RPC_FRAMEWORK = new Layer(2, TraceSegmentServiceParameters.SpanLayer.RPCFRAMEWORK);
   this.HTTP = new Layer(3, TraceSegmentServiceParameters.SpanLayer.HTTP);
   this.MQ = new Layer(4, TraceSegmentServiceParameters.SpanLayer.MQ);
