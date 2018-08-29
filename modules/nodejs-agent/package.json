@@ -1,6 +1,6 @@
 {
   "name": "skywalking-nodejs",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "The Node server instrument SDK for Apache SkyWalking",
   "main": "index.js",
   "scripts": {
