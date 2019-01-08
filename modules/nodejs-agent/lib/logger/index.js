@@ -16,32 +16,36 @@
  */
 
 const Logger = function() {
-  let _logger = require("debug");
+    let _debug = require("debug");
+    let _debugLogger = _debug("skywalking:debug");
+    let _infoLogger = _debug("skywalking:info");
+    let _warnLogger = _debug("skywalking:warn");
+    let _errorLogger = _debug("skywalking:error");
 
-  this.debug = function(className, format, ...args) {
-    _logger(className + ":debug")(format, ...args);
-  };
+    this.debug = function(className, format, ...args) {
+        _debugLogger("[%s] " + format, className, ...args);
+    };
 
-  this.info = function(className, format, ...args) {
-    _logger(className + ":info")(format, ...args);
-  };
+    this.info = function(className, format, ...args) {
+        _infoLogger("[%s] " + format, className, ...args);
+    };
 
-  this.warn = function(className, format, ...args) {
-    _logger(className + ":warn")(format, ...args);
-  };
+    this.warn = function(className, format, ...args) {
+        _warnLogger("[%s] " + format, className, ...args);
+    };
 
-  this.error = function(className, format, ...args) {
-    _logger(className + ":error")(format, ...args);
-  };
+    this.error = function(className, format, ...args) {
+        _errorLogger("[%s] " + format, className, ...args);
+    };
 };
 
 Logger.instance = null;
 
 Logger.getInstance = function() {
-  if (this.instance === null) {
-    this.instance = new Logger();
-  }
-  return this.instance;
+    if (this.instance === null) {
+        this.instance = new Logger();
+    }
+    return this.instance;
 };
 
 module.exports = Logger.getInstance();
