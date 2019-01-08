@@ -1,0 +1,16 @@
+* How to active Node.js Agent log
+  Node.js agent uses [[https://www.npmjs.com/package/debug][debug]] framework for output log, and your can active the log before you deploy application currently.
+  Note: *Node.js Agent only support that output the log to console currently.*
+  
+  To active all level log, You should add following variable into environment variables before you deploy application.
+  #+BEGIN_SRC 
+  DEBUG=skywalking:*
+  #+END_SRC
+  
+  Maybe you just want to active *error* level log, That's fine, just add the variable into environment variables. The Agent support four log level: *debug* *info* *warn* *error* currently.
+  #+BEGIN_SRC 
+  DEBUG=skywalking:error
+  #+END_SRC
+
+
+
