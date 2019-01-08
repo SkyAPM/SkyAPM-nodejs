@@ -39,7 +39,9 @@ module.exports = function(eggLoaderModule, instrumentation, contextManager) {
      */
     function wrapLoadMethod(origin) {
         return function(directory, property, opt) {
-            opt[loadProperty] = property;
+            if (opt != undefined) {
+                opt[loadProperty] = property;
+            }
             return origin.apply(this, arguments);
         };
     }
