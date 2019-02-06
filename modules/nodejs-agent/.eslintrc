@@ -15,7 +15,7 @@
     "max-len": [
       "error",
       {
-        "code": 120
+        "code": 180
       }
     ],
     "header/header": [

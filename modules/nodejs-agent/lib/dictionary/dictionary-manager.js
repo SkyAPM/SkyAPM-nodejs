@@ -14,28 +14,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-module.exports = DictionaryManager;
 const NetworkAddressDictionary = require("./network-address-dictionary");
-const OperationNameDictionary = require("./operation-name-dictionary");
+const EndpointDictionary = require("./endpoint-dictionary");
 
 /**
+ * @param {serviceManager} serviceManager
+ *
  * @author zhang xin
  */
-function DictionaryManager() {
-  this._networkAddressDictionary = new NetworkAddressDictionary();
-  this._operationNameDictionary = new OperationNameDictionary();
+function DictionaryManager(serviceManager) {
+    this._networkAddressDictionary = new NetworkAddressDictionary(serviceManager);
+    this._endpointDictionary = new EndpointDictionary(serviceManager);
 }
 
 DictionaryManager.prototype.findNetworkAddress = function(
     networkAddress, callback) {
-  return this._networkAddressDictionary.find.apply(
-      this._networkAddressDictionary, arguments);
+    return this._networkAddressDictionary.find.apply(
+        this._networkAddressDictionary, arguments);
 };
 
 
 DictionaryManager.prototype.findOperationName = function(
-    operationName, callback) {
-  return this._operationNameDictionary.find.apply(this._operationNameDictionary,
-      arguments);
+    endpoint, callback) {
+    return this._endpointDictionary.find.apply(this._endpointDictionary,
+        arguments);
 };
+
+DictionaryManager.prototype.launch = function() {
+    this._networkAddressDictionary.startRegisterNetworkTask();
+    this._endpointDictionary.startRegisterEndPoint();
+};
+
+module.exports = exports = new DictionaryManager();

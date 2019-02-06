@@ -30,7 +30,7 @@ function ID(idParts) {
     this._part2 = idParts.part2;
     this._part3 = idParts.part3;
   } else {
-    this._part1 = AgentConfig.getApplicationInstanceId();
+    this._part1 = AgentConfig.getInstanceId();
     this._part2 = process.pid *
     process.ppid ? process.ppid : (((1 + Math.random()) * 0x10000) | 0)
         + (((1 + Math.random()) * 0x10000) | 0);

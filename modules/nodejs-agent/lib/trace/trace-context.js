@@ -91,7 +91,7 @@ TraceContext.prototype.inject = function(contextCarrier) {
             contextCarrier.setEntryOperationName(operationName);
         });
 
-        entryApplicationInstanceId = AgentConfig.getApplicationInstanceId();
+        entryApplicationInstanceId = AgentConfig.getInstanceId();
         primaryDistributedTraceId = traceSegment.traceSegmentId().encode();
     });
 
@@ -113,7 +113,7 @@ TraceContext.prototype.inject = function(contextCarrier) {
     contextCarrier.setPrimaryDistributedTraceId(primaryDistributedTraceId);
     contextCarrier.setTraceSegmentId(this._traceSegment.traceSegmentId());
     contextCarrier.setParentApplicationInstanceId(
-        AgentConfig.getApplicationInstanceId());
+        AgentConfig.getInstanceId());
 };
 
 TraceContext.prototype.extract = function(contextCarrier) {

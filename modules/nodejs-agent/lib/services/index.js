@@ -15,12 +15,10 @@
  * limitations under the License.
  */
 
-module.exports = ServiceManager;
-
-const AgentConfig = require("../config");
-const traceSegmentCache = require("../cache");
-const ApplicationRegisterService = require("./application-register-service");
-const TraceSegmentSendService = require("./trace-segment-send-service");
+const RegisterService = require("./register-service");
+const TraceService = require("./trace-send-service");
+const RemoteClientService = require("./remote-client-service");
+const serviceManager = require("../dictionary/dictionary-manager");
 
 /**
  *
@@ -28,24 +26,34 @@ const TraceSegmentSendService = require("./trace-segment-send-service");
  * @author zhang xin
  */
 function ServiceManager() {
-  let directServers = AgentConfig.getDirectServices();
-  this._applicationRegisterService = new ApplicationRegisterService(directServers);
-  this._traceSegmentSendService = new TraceSegmentSendService(directServers);
 }
 
 ServiceManager.prototype.launch = function() {
-  let applicationRegisterService = this._applicationRegisterService;
-  let timer = setInterval(function() {
-    applicationRegisterService.registryApplication.apply(applicationRegisterService, [
-      function(applicationId, applicationInstanceId) {
-        AgentConfig.setApplicationId(applicationId);
-        AgentConfig.setApplicationInstanceId(applicationInstanceId);
-        timer.unref();
-      }]);
-  }, 1000);
+    this._traceService = new TraceService(this);
+    this._remoteClient = new RemoteClientService();
+    this._registerService = new RegisterService(this);
+    this._dictionaryManagerService = serviceManager;
 
-  let traceSegmentSendService = this._traceSegmentSendService;
-  traceSegmentCache.registerConsumer(function(segmentData) {
-    traceSegmentSendService.sendTraceSegment.apply(traceSegmentSendService, arguments);
-  });
+    this._remoteClient.launch();
+    this._registerService.launch();
+    this._traceService.launch();
+    this._dictionaryManagerService.launch();
 };
+
+ServiceManager.prototype.registerService = function() {
+    return this._registerService;
+};
+
+ServiceManager.prototype.traceService = function() {
+    return this._traceService;
+};
+
+ServiceManager.prototype.remoteClientService = function() {
+    return this._remoteClient;
+};
+
+ServiceManager.prototype.dictionaryManagerService = function() {
+    return this._dictionaryManagerService;
+};
+
+module.exports = new ServiceManager();

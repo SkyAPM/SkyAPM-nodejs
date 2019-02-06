@@ -20,7 +20,7 @@
 const Instrumentation = require("./instrumentation");
 const ContextManager = require("./trace/context-manager");
 const PluginManager = require("./plugins/plugin-manager");
-const ServiceManager = require("./services");
+const serviceManager = require("./services");
 const AgentConfig = require("./config");
 module.exports = Agent;
 
@@ -30,16 +30,14 @@ module.exports = Agent;
 function Agent() {
     this._instrumentation = null;
     this._contextManager = null;
-    this._serviceManager = null;
 }
 
 Agent.prototype.start = function(agentOptions) {
     AgentConfig.initConfig(agentOptions);
-    this._contextManager = new ContextManager(this._agentConfig);
-    this._instrumentation = new Instrumentation();
+    serviceManager.launch();
 
-    this._serviceManager = new ServiceManager();
-    this._serviceManager.launch();
+    this._contextManager = new ContextManager();
+    this._instrumentation = new Instrumentation();
 
     let _pluginManager = new PluginManager();
     let _agent = this;

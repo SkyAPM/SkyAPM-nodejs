@@ -14,64 +14,65 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-const AgentConfig = function() {
-    let _applicationCode = undefined;
-    let _applicationId = undefined;
-    let _applicationInstanceId = undefined;
-    let _directServices = undefined;
 
-    this.getApplicationId = function() {
-        return _applicationId;
-    };
-    this.setApplicationId = function(applicationId) {
-        _applicationId = applicationId;
-    };
+const uuid = require("uuid/v4");
 
-    this.getApplicationInstanceId = function() {
-        return _applicationInstanceId;
-    };
+/**
+ *
+ * @constructor
+ * @author zhang xin
+ */
+function AgentConfig() {
+    this._serviceName = undefined;
+    this._serviceId = undefined;
+    this._instanceId = undefined;
+    this._directServices = undefined;
+    this._instanceUUID = uuid();
+};
 
-    this.setApplicationInstanceId = function(applicationInstanceId) {
-        _applicationInstanceId = applicationInstanceId;
-    };
+AgentConfig.prototype.getServiceId = function() {
+    return this._serviceId;
+};
+AgentConfig.prototype.setServiceId = function(applicationId) {
+    this._serviceId = applicationId;
+};
 
-    this.getApplicationCode = function() {
-        return _applicationCode;
-    };
+AgentConfig.prototype.getInstanceId = function() {
+    return this._instanceId;
+};
 
-    this.getDirectServices = function() {
-        return _directServices;
-    };
+AgentConfig.prototype.setInstanceId = function(applicationInstanceId) {
+    this._instanceId = applicationInstanceId;
+};
 
-    this.setDirectServices = function(directServices) {
-        _directServices = directServices;
-    };
+AgentConfig.prototype.getServiceName = function() {
+    return this._serviceName;
+};
 
-    this.initConfig = function(agentOptions) {
-        if (!agentOptions.hasOwnProperty("applicationCode")) {
-            throw new Error("application Code cannot be empty");
-        }
-        _applicationCode = agentOptions.applicationCode;
+AgentConfig.prototype.getDirectServices = function() {
+    return this._directServices;
+};
 
-        _directServices = "localhost:11800";
-        // TODO for now, only support one address
-        if (agentOptions.hasOwnProperty("directServers")) {
-            _directServices = agentOptions.directServers;
-        }
-    };
+AgentConfig.prototype.setDirectServices = function(directServices) {
+    this._directServices = directServices;
+};
 
-    if (AgentConfig.caller != AgentConfig.getInstance) {
-        throw new Error("This object cannot be instanciated");
+
+AgentConfig.prototype.instanceUUID = function() {
+    return this._instanceUUID;
+};
+
+AgentConfig.prototype.initConfig = function(agentOptions) {
+    if (!agentOptions.hasOwnProperty("serviceName")) {
+        throw new Error("service name cannot be empty");
+    }
+    this._serviceName = agentOptions.serviceName;
+
+    this._directServices = "localhost:11800";
+    if (agentOptions.hasOwnProperty("directServers")) {
+        this._directServices = agentOptions.directServers;
     }
 };
 
-AgentConfig.instance = null;
 
-AgentConfig.getInstance = function() {
-    if (this.instance === null) {
-        this.instance = new AgentConfig();
-    }
-    return this.instance;
-};
-
-module.exports = AgentConfig.getInstance();
+module.exports = exports = new AgentConfig();

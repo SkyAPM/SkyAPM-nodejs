@@ -20,9 +20,11 @@
 module.exports = TraceSegment;
 
 const ID = require("./trace-segment-id");
-const AgentConfig = require("../config");
+const agentConfig = require("../config");
 const traceSegmentCache = require("../cache");
-const TraceSegmentServiceParameters = require("../network/TraceSegmentService_pb");
+
+const TraceCommonParameteres = require("../network/common/trace-common_pb");
+const TraceSegmentParameteres = require("../network/language-agent-v2/trace_pb");
 
 /**
  * @author zhang xin
@@ -87,15 +89,15 @@ TraceSegment.prototype.fetchEntryOperationNameInfo = function(
 };
 
 TraceSegment.prototype.transform = function() {
-    let serializedSegment = new TraceSegmentServiceParameters.UpstreamSegment();
-    let serializeTraceSegmentObject = new TraceSegmentServiceParameters.TraceSegmentObject();
+    let serializedSegment = new TraceCommonParameteres.UpstreamSegment();
+    let serializeTraceSegmentObject = new TraceSegmentParameteres.SegmentObject();
 
     /**
      * @param {traceSegmentId} traceSegmentId
      * @return {TraceSegmentServiceParameters.UniqueId}
      */
     function buildTraceSegmentId(traceSegmentId) {
-        let serializeTraceSegmentId = new TraceSegmentServiceParameters.UniqueId();
+        let serializeTraceSegmentId = new TraceCommonParameteres.UniqueId();
         serializeTraceSegmentId.addIdparts(traceSegmentId.part1());
         serializeTraceSegmentId.addIdparts(traceSegmentId.part2());
         serializeTraceSegmentId.addIdparts(traceSegmentId.part3());
@@ -106,8 +108,8 @@ TraceSegment.prototype.transform = function() {
     this._finishedSpan.forEach(function(span) {
         serializeTraceSegmentObject.addSpans(span.transform());
     });
-    serializeTraceSegmentObject.setApplicationid(AgentConfig.getApplicationId());
-    serializeTraceSegmentObject.setApplicationinstanceid(AgentConfig.getApplicationInstanceId());
+    serializeTraceSegmentObject.setServiceid(agentConfig.getServiceId());
+    serializeTraceSegmentObject.setServiceinstanceid(agentConfig.getInstanceId());
     serializeTraceSegmentObject.setIssizelimited(false);
 
     if (this._refs.length > 0) {
