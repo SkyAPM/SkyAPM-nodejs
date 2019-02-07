@@ -19,11 +19,12 @@
 
 module.exports = ContextManager;
 const TraceContext = require("./trace-context");
-const DictionaryManager = require("../dictionary/dictionary-manager");
 const AgentConfig = require("../config");
 const NoopSpan = require("./noop-span");
 const NoopTraceContext = require("./noop-trace-context");
 const logger = require("../logger");
+const Endpoint = require("../dictionary/endpoint");
+const dictionaryManager = require("../dictionary/dictionary-manager");
 
 const NOOP_TRACE_CONTEXT = new NoopTraceContext();
 const NOOP_SPAN = new NoopSpan(NOOP_TRACE_CONTEXT);
@@ -33,11 +34,11 @@ const NOOP_SPAN = new NoopSpan(NOOP_TRACE_CONTEXT);
  */
 function ContextManager() {
     this._activeTraceContext = undefined;
-    this._dictionaryManager = new DictionaryManager();
+    this._dictionaryManager = dictionaryManager;
     this._createSpan = function(spanOptions) {
         let traceContext = NOOP_TRACE_CONTEXT;
-        if (!AgentConfig.getApplicationId() ||
-            !AgentConfig.getApplicationInstanceId()) {
+        if (!AgentConfig.getServiceId() ||
+            !AgentConfig.getInstanceId()) {
             logger.debug("context-manager", "use the noop-span before the application has been registered.");
             return traceContext.span();
         }
@@ -54,7 +55,7 @@ function ContextManager() {
 };
 
 ContextManager.prototype.inject = function(contextCarrier) {
-    if (!AgentConfig.getApplicationId()) {
+    if (!AgentConfig.getServiceId()) {
         return;
     }
 
@@ -62,7 +63,7 @@ ContextManager.prototype.inject = function(contextCarrier) {
 };
 
 ContextManager.prototype.extract = function(contextCarrier) {
-    if (!AgentConfig.getApplicationId()) {
+    if (!AgentConfig.getServiceId()) {
         return;
     }
 
@@ -89,7 +90,7 @@ ContextManager.prototype.createEntrySpan = function(
         spanType: "ENTRY",
     };
 
-    this._dictionaryManager.findOperationName(operationName,
+    this._dictionaryManager.findOperationName(new Endpoint(operationName, true, false),
         function(key, value) {
             spanOptions[key] = value;
         });
@@ -106,7 +107,7 @@ ContextManager.prototype.createEntrySpan = function(
 
 ContextManager.prototype.createExitSpan = function(
     operationName, peerId, contextCarrier) {
-    if (!AgentConfig.getApplicationId()) {
+    if (!AgentConfig.getServiceId()) {
         logger.debug("context-manager", "use the noop-span before the application has been registered.");
         return NOOP_SPAN;
     }
@@ -115,7 +116,7 @@ ContextManager.prototype.createExitSpan = function(
         spanType: "EXIT",
     };
 
-    this._dictionaryManager.findOperationName(operationName,
+    this._dictionaryManager.findOperationName(new Endpoint(operationName, false, true),
         function(key, value) {
             spanOptions[key] = value;
         });
@@ -136,12 +137,8 @@ ContextManager.prototype.createExitSpan = function(
 ContextManager.prototype.createLocalSpan = function(operationName) {
     let spanOptions = {
         spanType: "LOCAL",
+        operationName: operationName,
     };
-
-    this._dictionaryManager.findOperationName(operationName,
-        function(key, value) {
-            spanOptions[key] = value;
-        });
 
     let span = this._createSpan(spanOptions);
     this.active(span.traceContext());

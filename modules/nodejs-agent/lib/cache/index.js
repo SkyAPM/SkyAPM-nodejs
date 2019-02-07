@@ -15,60 +15,52 @@
  * limitations under the License.
  */
 
-const logger = require("../logger");
+/**
+ *
+ * @constructor
+ * @author zhang xin
+ */
+function TraceSegmentCachePool() {
+    this._bucket = [];
+    this._bucketSize = Number.isSafeInteger(256);
+    this._timeout = undefined;
+    this._consumer = undefined;
+    this._flushInterval = 1000;
+};
 
-let TraceSegmentCachePool = function() {
-  let _bucket = [];
-  let _bucketSize = Number.isSafeInteger(256);
-  let _timeout = undefined;
-  let _consumer = undefined;
-  let _flushInterval = 1000;
-
-  this.put = function(traceSegment) {
-    logger.debug("trace-segment-cache-pool", "put new TraceSegment");
-    _bucket.push(traceSegment);
-    if (_bucketSize !== -1 && _bucket.length >= _bucketSize) {
-      this.consumeData();
+TraceSegmentCachePool.prototype.put = function(traceSegment) {
+    this._bucket.push(traceSegment);
+    if (this._bucketSize !== -1 && this._bucket.length >= this._bucketSize) {
+        this.consumeData();
     } else if (!this._timeout) {
-      this.scheduleConsumeData();
+        this.scheduleConsumeData();
     }
-  };
+};
 
-  this.consumeData = function() {
-    logger.debug("trace-segment-cache-pool", "consumer {} TraceSegments.", _bucket.length);
-    if (_bucket.length != 0) {
-      _consumer(_bucket);
+TraceSegmentCachePool.prototype.consumeData = function() {
+    if (this._bucket.length != 0) {
+        this._consumer(this._bucket);
     }
-
     this._clear();
-  };
+};
 
-  this.scheduleConsumeData = function() {
+TraceSegmentCachePool.prototype.scheduleConsumeData = function() {
     let self = this;
-    _timeout = setTimeout(function() {
-      self.consumeData();
-    }, _flushInterval);
-    _timeout.unref();
-  };
-
-  this._clear = function() {
-    clearTimeout(_timeout);
-    _bucket = [];
-    _timeout = undefined;
-  };
-
-  this.registerConsumer = function(consumer) {
-    _consumer = consumer;
-  };
+    this._timeout = setTimeout(function() {
+        self.consumeData();
+    }, this._flushInterval);
+    this._timeout.unref();
 };
 
-TraceSegmentCachePool.instance = null;
-
-TraceSegmentCachePool.getInstance = function() {
-  if (this.instance === null) {
-    this.instance = new TraceSegmentCachePool();
-  }
-  return this.instance;
+TraceSegmentCachePool.prototype._clear = function() {
+    clearTimeout(this._timeout);
+    this._bucket = [];
+    this._timeout = undefined;
 };
 
-module.exports = TraceSegmentCachePool.getInstance();
+TraceSegmentCachePool.prototype.registerConsumer = function(consumer) {
+    this._consumer = consumer;
+};
+
+
+module.exports = exports = new TraceSegmentCachePool();

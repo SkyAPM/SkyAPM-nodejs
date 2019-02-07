@@ -15,21 +15,33 @@
  * limitations under the License.
  */
 
-module.exports = OperationNameDictionary;
-
 /**
+ * @constructor
  * @author zhang xin
  */
-function OperationNameDictionary() {
-  this._registerOperationNames = {};
-  this._unregisterOperationNames = [];
+function Utils() {
+
 }
 
-OperationNameDictionary.prototype.find = function(operationName, callback) {
-  if (!this._registerOperationNames.hasOwnProperty(operationName)) {
-    this._unregisterOperationNames.push(operationName);
-    return callback("operationName", operationName);
-  }
+Utils.prototype.compare = function(x, y) {
+    if (x === y) return true;
+    if (!(x instanceof Object) || !(y instanceof Object)) return false;
+    if (x.constructor !== y.constructor) return false;
 
-  return callback("operationId", this._registerOperationNames[operationName]);
+    for (let p in x) {
+        if (!x.hasOwnProperty(p)) continue;
+        if (!y.hasOwnProperty(p)) return false;
+        if (x[p] === y[p]) continue;
+        if (typeof(x[p]) !== "object") return false;
+        if (!Object.equals(x[p], y[p])) return false;
+    }
+
+    for (p in y) {
+        if (y.hasOwnProperty(p) && !x.hasOwnProperty(p)) return false;
+    }
+
+    return true;
 };
+
+
+module.exports = exports = new Utils();

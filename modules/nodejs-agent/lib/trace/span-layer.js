@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-const TraceSegmentServiceParameters = require("../network/TraceSegmentService_pb");
+const TraceSegmentServiceParameters = require("../network/common/trace-common_pb");
 
 /**
  *
@@ -24,33 +24,33 @@ const TraceSegmentServiceParameters = require("../network/TraceSegmentService_pb
  * @constructor
  */
 function Layer(id, grpcData) {
-  this._id = id;
-  this._grpcData = grpcData;
+    this._id = id;
+    this._grpcData = grpcData;
 }
 
 Layer.prototype.getId = function() {
-  return this._id;
+    return this._id;
 };
 
 Layer.prototype.getGrpcData = function() {
-  return this._grpcData;
+    return this._grpcData;
 };
 
 let Layers = function() {
-  this.DB = new Layer(1, TraceSegmentServiceParameters.SpanLayer.DATABASE);
-  this.RPC_FRAMEWORK = new Layer(2, TraceSegmentServiceParameters.SpanLayer.RPCFRAMEWORK);
-  this.HTTP = new Layer(3, TraceSegmentServiceParameters.SpanLayer.HTTP);
-  this.MQ = new Layer(4, TraceSegmentServiceParameters.SpanLayer.MQ);
-  this.CACHE = new Layer(5, TraceSegmentServiceParameters.SpanLayer.CACHE);
+    this.DB = new Layer(1, TraceSegmentServiceParameters.SpanLayer.DATABASE);
+    this.RPC_FRAMEWORK = new Layer(2, TraceSegmentServiceParameters.SpanLayer.RPCFRAMEWORK);
+    this.HTTP = new Layer(3, TraceSegmentServiceParameters.SpanLayer.HTTP);
+    this.MQ = new Layer(4, TraceSegmentServiceParameters.SpanLayer.MQ);
+    this.CACHE = new Layer(5, TraceSegmentServiceParameters.SpanLayer.CACHE);
 };
 
 Layers.instance = null;
 
 Layers.getInstance = function() {
-  if (this.instance === null) {
-    this.instance = new Layers();
-  }
-  return this.instance;
+    if (this.instance === null) {
+        this.instance = new Layers();
+    }
+    return this.instance;
 };
 
 exports.Layer = Layer;
