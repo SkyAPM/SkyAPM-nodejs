@@ -29,6 +29,6 @@ if (args.hasOwnProperty("sw_direct_Servers")) {
 }
 
 require("skywalking-nodejs").start({
-    applicationCode: applicationCode,
+    serviceName: applicationCode,
     directServers: directServers,
 });
