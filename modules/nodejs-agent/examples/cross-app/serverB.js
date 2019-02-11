@@ -1,5 +1,5 @@
 /*
- * Licensed to the OpenSkywalking under one or more
+ * Licensed to the SkyAPM under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
@@ -15,56 +15,56 @@
  * limitations under the License.
  */
 
-require('skywalking-nodejs').start({
-    applicationCode: 'test1'
+require("skyapm-nodejs").start({
+    serviceName: "test1",
 });
 
-const http = require('http')
-var mysql = require('mysql');
-const port = 3000
+const http = require("http");
+const mysql = require("mysql");
+const port = 3000;
 
 const requestHandler = (request, response) => {
-    var connection = mysql.createConnection({
-        host: 'localhost',
+    let connection = mysql.createConnection({
+        host: "localhost",
         port: 3307,
-        user: 'root',
-        password: 'root',
-        database: 'test'
+        user: "root",
+        password: "root",
+        database: "test",
     });
 
     connection.connect();
 
-    connection.query('SELECT SLEEP(1)', function (error, results, fields) {
+    connection.query("SELECT SLEEP(1)", function(error, results, fields) {
         if (error) throw error;
 
         connection = mysql.createConnection({
-            host: 'localhost',
+            host: "localhost",
             port: 3307,
-            user: 'root',
-            password: 'root',
-            database: 'test'
+            user: "root",
+            password: "root",
+            database: "test",
         });
 
         connection.connect();
 
-        connection.query('SELECT SLEEP(3)', function (error, results, fields) {
+        connection.query("SELECT SLEEP(3)", function(error, results, fields) {
             if (error) throw error;
         });
     });
 
-    connection.query('SELECT SLEEP(2)', function (error, results, fields) {
+    connection.query("SELECT SLEEP(2)", function(error, results, fields) {
         if (error) throw error;
     });
 
     response.end("test");
-}
+};
 
-const serverB = http.createServer(requestHandler)
+const serverB = http.createServer(requestHandler);
 
 serverB.listen(port, (err) => {
     if (err) {
-        return console.log('something bad happened', err)
+        return console.log("something bad happened", err);
     }
-    console.log(`server is listening on ${port}`)
-})
+    console.log(`server is listening on ${port}`);
+});
 

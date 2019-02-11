@@ -1,5 +1,5 @@
 /*
- * Licensed to the OpenSkywalking under one or more
+ * Licensed to the SkyAPM under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
@@ -14,3 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+"use strict";
+
+const args = JSON.parse(process.argv.slice(2));
+let applicationCode = "You Application";
+let directServers = "localhost:11800";
+if (args.hasOwnProperty("sw_pplication_code")) {
+    applicationCode = args["sw_pplication_code"];
+}
+
+if (args.hasOwnProperty("sw_direct_Servers")) {
+    directServers = args["sw_direct_Servers"];
+}
+
+require("skywalking-nodejs").start({
+    applicationCode: applicationCode,
+    directServers: directServers,
+});

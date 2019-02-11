@@ -1,5 +1,5 @@
 /*
- * Licensed to the OpenSkywalking under one or more
+ * Licensed to the SkyAPM under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
@@ -14,42 +14,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-require('skywalking-nodejs').start({
-    applicationCode: 'test'
+require("skyapm-nodejs").start({
+    serviceName: "test",
 });
 
-var http = require('http');
-const port = 3001
+const http = require("http");
+const port = 3001;
 
-callback = function (response) {
-    var str = ''
-    response.on('data', function (chunk) {
+callback = function(response) {
+    let str = "";
+    response.on("data", function(chunk) {
         str += chunk;
     });
 
-    response.on('end', function () {
+    response.on("end", function() {
         console.log(str);
     });
-}
+};
 
 const requestHandler = (request, response) => {
-    var options = {
-        host: 'localhost',
-        path: '/' + 1,
-        port: '3000',
-        headers: {'custom': 'Custom Header Demo works'}
+    let options = {
+        host: "localhost",
+        path: "/" + 1,
+        port: "3000",
+        headers: {"custom": "Custom Header Demo works"},
     };
-    var req = http.request(options, callback);
+    let req = http.request(options, callback);
     req.end();
 
     response.end("success");
-}
+};
 
-const server = http.createServer(requestHandler)
+const server = http.createServer(requestHandler);
 
 server.listen(port, (err) => {
     if (err) {
-        return console.log('something bad happened', err)
+        return console.log("something bad happened", err);
     }
-    console.log(`server is listening on ${port}`)
-})
+    console.log(`server is listening on ${port}`);
+});

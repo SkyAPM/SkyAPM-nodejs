@@ -1,5 +1,5 @@
 {
-  "name": "skywalking-nodejs",
+  "name": "skyapm-nodejs",
   "version": "1.0.0",
   "description": "The Node server instrument SDK for Apache SkyWalking",
   "main": "index.js",
@@ -12,10 +12,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/OpenSkywalking/skywalking-nodejs.git"
+    "url": "git+https://github.com/SkyAPM/SkyAPM-nodejs.git"
   },
   "keywords": [
-    "Skywalking",
+    "SkyAPM",
     "APM",
     "Trace"
   ],
@@ -28,9 +28,9 @@
   ],
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/OpenSkywalking/skywalking-nodejs/issues"
+    "url": "https://github.com/SkyAPM/SkyAPM-nodejs/issues"
   },
-  "homepage": "https://github.com/OpenSkywalking/skywalking-nodejs#readme",
+  "homepage": "https://github.com/SkyAPM/SkyAPM-nodejs#readme",
   "dependencies": {
     "async": "^2.6.1",
     "debug": "^3.1.0",

@@ -11,5 +11,5 @@ cache:
     - "node_modules"
 
 script:
-  - cd ${TRAVIS_BUILD_DIR}/modules/nodejs-agent && npm install && npm run check
-  - cd ${TRAVIS_BUILD_DIR}/modules/skywalking-egg-require && npm install && npm run check
+  - cd ${TRAVIS_BUILD_DIR}/modules/nodejs-agent && npm install && npm run check && npm link 
+  - cd ${TRAVIS_BUILD_DIR}/modules/skyapm-egg-require && npm link skyapm-nodejs && npm install && npm run check

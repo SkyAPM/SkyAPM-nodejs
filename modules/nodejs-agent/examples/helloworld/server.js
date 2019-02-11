@@ -1,5 +1,5 @@
 /*
- * Licensed to the OpenSkywalking under one or more
+ * Licensed to the SkyAPM under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
@@ -15,21 +15,21 @@
  * limitations under the License.
  */
 
-require('skywalking-nodejs').start();
+require("skyapm-nodejs").start();
 
-for (var i = 0; i < 3; i++) {
-    var mysql = require('mysql');
-    var connection = mysql.createConnection({
-        host: 'localhost',
+for (let i = 0; i < 3; i++) {
+    let mysql = require("mysql");
+    let connection = mysql.createConnection({
+        host: "localhost",
         port: 3307,
-        user: 'root',
-        password: 'root',
-        database: 'test'
+        user: "root",
+        password: "root",
+        database: "test",
     });
 
     connection.connect();
 
-    connection.query('SELECT SLEEP(1)', function (error, results, fields) {
+    connection.query("SELECT SLEEP(1)", function(error, results, fields) {
         if (error) throw error;
         console.log("success");
     });
