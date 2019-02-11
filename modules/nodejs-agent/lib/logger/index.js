@@ -1,5 +1,5 @@
 /*
- * Licensed to the OpenSkywalking under one or more
+ * Licensed to the SkyAPM under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
@@ -17,10 +17,10 @@
 
 const Logger = function() {
     let _debug = require("debug");
-    let _debugLogger = _debug("skywalking:debug");
-    let _infoLogger = _debug("skywalking:info");
-    let _warnLogger = _debug("skywalking:warn");
-    let _errorLogger = _debug("skywalking:error");
+    let _debugLogger = _debug("skyapm:debug");
+    let _infoLogger = _debug("skyapm:info");
+    let _warnLogger = _debug("skyapm:warn");
+    let _errorLogger = _debug("skyapm:error");
 
     this.debug = function(className, format, ...args) {
         _debugLogger("[%s] " + format, className, ...args);

@@ -1,5 +1,5 @@
 /*
- * Licensed to the OpenSkywalking under one or more
+ * Licensed to the SkyAPM under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
@@ -46,6 +46,6 @@ PluginManager.prototype.attemptToFindInterceptor = function(moduleName, version,
 };
 
 PluginManager.prototype.allEnhanceModules = function() {
-    logger.info("skywalking-plugin-manager", "loaded enhance modules: %s", this._enhanceModule);
+    logger.info("skyapm-plugin-manager", "loaded enhance modules: %s", this._enhanceModule);
     return this._enhanceModule;
 };

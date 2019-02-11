@@ -1,5 +1,5 @@
 {
-  "name": "skywalking-egg-require",
+  "name": "skyapm-egg-require",
   "version": "0.1.4",
   "description": "The require module that Skywalking nodejs agent enhance the egg framework",
   "main": "index.js",
@@ -8,10 +8,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/OpenSkywalking/skywalking-nodejs.git"
+    "url": "git+https://github.com/SkyAPM/SkyAPM-nodejs.git"
   },
   "keywords": [
-    "skywalking",
+    "SkyAPM",
     "egg"
   ],
   "contributors": [
@@ -24,11 +24,11 @@
   "author": "Zhang Xin",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/OpenSkywalking/skywalking-nodejs/issues"
+    "url": "https://github.com/SkyAPM/SkyAPM-nodejs/issues"
   },
-  "homepage": "https://github.com/OpenSkywalking/skywalking-nodejs#readme",
+  "homepage": "https://github.com/SkyAPM/SkyAPM-nodejs#readme",
   "dependencies": {
-    "skywalking-nodejs": "^0.3.3"
+    "skyapm-nodejs": "^0.3.3"
   },
   "devDependencies": {
     "eslint": "^4.19.1",
