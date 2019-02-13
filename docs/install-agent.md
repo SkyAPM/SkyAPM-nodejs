@@ -1,7 +1,7 @@
 # Install nodejs agent
 
 ## Installation nodejs module
-Add the skywalking-nodejs module as a dependency to your application:
+Add the skyapm-nodejs module as a dependency to your application:
 > npm install skyapm-nodejs@latest --save
 
 ## Initialization
