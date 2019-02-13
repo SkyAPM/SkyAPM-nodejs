@@ -1,7 +1,7 @@
 {
   "name": "skyapm-egg-require",
   "version": "0.1.4",
-  "description": "The require module that Skywalking nodejs agent enhance the egg framework",
+  "description": "The require module that skyapm nodejs agent enhance the egg framework",
   "main": "index.js",
   "scripts": {
     "check": "eslint index.js"
