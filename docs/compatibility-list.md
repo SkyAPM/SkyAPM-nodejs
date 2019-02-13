@@ -8,7 +8,8 @@ So you have two way to resolve this problem. One is **download the capatiblity v
 | Nodejs agent version| Skywalking backend version|
 |:------|:----|
 | 0.1.x | 5.0.0-beta |
-| 0.3.0 | 5.0.0-RC (not release) |
+| 0.3.0 | 5.0.0-RC |
+| 1.0.0 | 6.0.0-GA |
 
 
 ## Add your own component library
@@ -20,4 +21,4 @@ Here is the plugin support mapping.
 |:-----|:------|:-----|:-----|
 | 2 | Http | 0.1.2 | 5.0.0-beta|
 | 5 | Mysql | 0.1.2 | 5.0.0-beta|
-| 4003 | Egg | 0.3.0 | 5.0.0-RC (not release)|
+| 4003 | Egg | 0.3.0 | 5.0.0-RC |
