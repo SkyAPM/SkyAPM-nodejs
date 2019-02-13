@@ -158,11 +158,11 @@ ContextManager.prototype.rewriteOperationName = function(span, operationName) {
         });
 };
 
-ContextManager.prototype.rewriteSpanInfo = function(span, spanInfo) {
+ContextManager.prototype.rewriteEntrySpanInfo = function(span, spanInfo) {
     let self = this;
     Object.keys(spanInfo).forEach(function(property) {
         if (property == "operationName") {
-            self.rewriteOperationName(span, spanInfo[property]);
+            self.rewriteOperationName(span, new Endpoint(spanInfo[property], true, false));
         } else {
             span[property](spanInfo[property]);
         }

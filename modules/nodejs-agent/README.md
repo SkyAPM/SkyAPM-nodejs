@@ -1,6 +1,6 @@
-# Skywalking Nodejs Agent
+# SkyAPM Nodejs Agent
 
-SkyWalking Node.js is the Node.js instrumentation agent, which is compatible with [Apache SkyWalking(Incubating) APM](https://github.com/apache/incubator-skywalking) backend and others compatible agents/SDKs.
+SkyAPM Node.js is the Node.js instrumentation agent, which is compatible with [Apache SkyWalking(Incubating) APM](https://github.com/apache/incubator-skywalking) backend and others compatible agents/SDKs.
 
 [![Build Status](https://travis-ci.org/SkyAPM/SkyAPM-nodejs.svg?branch=master)](https://travis-ci.org/SkyAPM/SkyAPM-nodejs)
 

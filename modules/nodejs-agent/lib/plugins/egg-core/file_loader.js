@@ -81,7 +81,7 @@ module.exports = function(fileLoaderModule, instrumentation, contextManager) {
             let runningSpan = this.request.ctx[activeContext].span();
             try {
                 let requestURL = this.request.ctx._matchedRoute;
-                contextManager.rewriteSpanInfo(runningSpan, {
+                contextManager.rewriteEntrySpanInfo(runningSpan, {
                     "operationName": requestURL,
                     "component": componentDefine.Components.EGG,
                     "spanLayer": layerDefine.Layers.HTTP,

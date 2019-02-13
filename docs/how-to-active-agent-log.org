@@ -4,12 +4,12 @@
   
   To active all level log, You should add following variable into environment variables before you deploy application.
   #+BEGIN_SRC 
-  DEBUG=skywalking:*
+  DEBUG=skyapm:*
   #+END_SRC
   
   Maybe you just want to active *error* level log, That's fine, just add the variable into environment variables. The Agent support four log level: *debug* *info* *warn* *error* currently.
   #+BEGIN_SRC 
-  DEBUG=skywalking:error
+  DEBUG=skyapm:error
   #+END_SRC
 
 
