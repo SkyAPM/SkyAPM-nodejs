@@ -18,17 +18,17 @@
 "use strict";
 
 const args = JSON.parse(process.argv.slice(2));
-let applicationCode = "You Application";
+let serviceName = "You Application";
 let directServers = "localhost:11800";
-if (args.hasOwnProperty("sw_pplication_code")) {
-    applicationCode = args["sw_pplication_code"];
+if (args.hasOwnProperty("sw_service_name")) {
+    serviceName = args["sw_service_name"];
 }
 
 if (args.hasOwnProperty("sw_direct_Servers")) {
     directServers = args["sw_direct_Servers"];
 }
 
-require("skywalking-nodejs").start({
-    applicationCode: applicationCode,
+require("skyapm-nodejs").start({
+    serviceName: serviceName,
     directServers: directServers,
 });

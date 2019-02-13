@@ -1,10 +1,10 @@
 # How to deploy agent in egg framework
 
-## Install `skywalking-egg-require` module
+## Install `skyapm-egg-require` module
 1. goto project 
 2. run the following command
 ```shell
-$ npm install skywalking-egg-require --save
+$ npm install skyapm-egg-require --save
 ```
 
 ## Deploy Skywalking backend
