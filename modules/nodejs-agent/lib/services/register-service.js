@@ -101,7 +101,8 @@ RegisterService.prototype.launch = function() {
         sendHeartBeat = function(serviceId, instanceID, callback) {
             async.forever(function(next) {
                 setTimeout(function() {
-                    that._serviceManager.remoteClientService().sendHeartBeat(instanceID);
+                    logger.info("RegisterService", "The Service[%s, %d] send heart beat to Collector.", agentConfig.getServiceName(), agentConfig.getInstanceId());
+                    that._serviceManager.remoteClientService().sendHeartBeat(agentConfig.getInstanceId());
                     next();
                 }, 3 * 60 * 1000);
             }, function(err) {
