@@ -54,7 +54,7 @@ RemoteClient.prototype.sendTraceData = function(traces) {
 
     let call = this._tracerSender.collect(function(error, commands) {
         if (error) {
-            logger.error("remote-client-service", "Failed to register network address. error message: %s", err.message);
+            logger.error("remote-client-service", "Failed to register network address. error message: %s", error.message);
             that.dealWithError(error);
             return;
         }
