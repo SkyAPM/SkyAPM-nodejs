@@ -24,7 +24,8 @@
     ],
     "no-invalid-this": "off",
     "prefer-rest-params": "off",
-    "prefer-spread": "off"
+    "prefer-spread": "off",
+    "linebreak-style": [0 ,"error", "windows"]
   },
   "parserOptions": {
     "ecmaVersion": 2017
