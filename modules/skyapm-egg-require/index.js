@@ -18,8 +18,8 @@
 "use strict";
 
 const args = JSON.parse(process.argv.slice(2));
-let serviceName = "You Application";
-let directServers = "localhost:11800";
+let serviceName;
+let directServers;
 if (args.hasOwnProperty("sw_service_name")) {
     serviceName = args["sw_service_name"];
 }
@@ -29,6 +29,6 @@ if (args.hasOwnProperty("sw_direct_Servers")) {
 }
 
 require("skyapm-nodejs").start({
-    serviceName: serviceName,
-    directServers: directServers,
+    serviceName,
+    directServers,
 });

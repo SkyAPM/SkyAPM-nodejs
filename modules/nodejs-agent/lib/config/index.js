@@ -66,12 +66,8 @@ AgentConfig.prototype.initConfig = function(agentOptions) {
     if (!agentOptions.hasOwnProperty("serviceName")) {
         throw new Error("service name cannot be empty");
     }
-    this._serviceName = agentOptions.serviceName;
-
-    this._directServices = "localhost:11800";
-    if (agentOptions.hasOwnProperty("directServers")) {
-        this._directServices = agentOptions.directServers;
-    }
+    this._serviceName = agentOptions.serviceName || process.env.SW_SERVICE_NAME || "You Application";
+    this._directServices = agentOptions.directServers || process.env.SW_DIRECT_SERVERS || "localhost:11800";
 };
 
 
