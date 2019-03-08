@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+"use strict";
 
 module.exports = RegisterService;
 const os = require("os");
@@ -35,7 +36,7 @@ RegisterService.prototype.launch = function() {
     let that = this;
 
     async.waterfall([
-        registerService = function(successCallback) {
+        function registerService(successCallback) {
             let _serviceId = undefined;
             async.whilst(
                 function() {
@@ -47,10 +48,10 @@ RegisterService.prototype.launch = function() {
                         _serviceId = serviceId;
                         successCallback(null, serviceId);
                     }, callback);
-                },
+                }
             );
         },
-        registerInstance = function(serviceId, successCallback) {
+        function registerInstance(serviceId, successCallback) {
             let _instanceId = undefined;
             async.whilst(
                 function() {
@@ -73,7 +74,7 @@ RegisterService.prototype.launch = function() {
                         _instanceId = instanceId;
                         successCallback(null, serviceId, instanceId);
                     }, callback);
-                },
+                }
             );
 
             /**
@@ -93,12 +94,12 @@ RegisterService.prototype.launch = function() {
                 return ipv4Address;
             }
         },
-        changeConfiguration = function(serviceId, instanceId, callback) {
+        function changeConfiguration(serviceId, instanceId, callback) {
             agentConfig.setServiceId(serviceId);
             agentConfig.setInstanceId(instanceId);
             callback(null, serviceId, instanceId);
         },
-        sendHeartBeat = function(serviceId, instanceID, callback) {
+        function sendHeartBeat(serviceId, instanceID, callback) {
             async.forever(function(next) {
                 setTimeout(function() {
                     logger.info("RegisterService", "The Service[%s, %d] send heart beat to Collector.", agentConfig.getServiceName(), agentConfig.getInstanceId());

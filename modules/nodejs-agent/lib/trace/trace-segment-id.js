@@ -14,6 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+"use strict";
+
 module.exports = ID;
 
 const AgentConfig = require("../config");
@@ -25,35 +27,35 @@ const process = require("process");
  * @author zhang xin
  */
 function ID(idParts) {
-  if (idParts) {
-    this._part1 = idParts.part1;
-    this._part2 = idParts.part2;
-    this._part3 = idParts.part3;
-  } else {
-    this._part1 = AgentConfig.getInstanceId();
-    this._part2 = process.pid *
-    process.ppid ? process.ppid : (((1 + Math.random()) * 0x10000) | 0)
-        + (((1 + Math.random()) * 0x10000) | 0);
-    this._part3 = Number(process.hrtime().join(""));
-  }
+    if (idParts) {
+        this._part1 = idParts.part1;
+        this._part2 = idParts.part2;
+        this._part3 = idParts.part3;
+    } else {
+        this._part1 = AgentConfig.getInstanceId();
+        this._part2 = process.pid *
+        process.ppid ? process.ppid : (((1 + Math.random()) * 0x10000) | 0)
+            + (((1 + Math.random()) * 0x10000) | 0);
+        this._part3 = Number(process.hrtime().join(""));
+    }
 }
 
 ID.prototype.toString = function() {
-  return this._part1 + "." + this._part2 + "." + this._part3;
+    return this._part1 + "." + this._part2 + "." + this._part3;
 };
 
 ID.prototype.encode = function() {
-  return this.toString();
+    return this.toString();
 };
 
 ID.prototype.part1 = function() {
-  return this._part1;
+    return this._part1;
 };
 
 ID.prototype.part2 = function() {
-  return this._part2;
+    return this._part2;
 };
 
 ID.prototype.part3 = function() {
-  return this._part3;
+    return this._part3;
 };

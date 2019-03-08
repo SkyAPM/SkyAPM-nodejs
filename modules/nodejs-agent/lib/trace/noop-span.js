@@ -25,7 +25,7 @@ module.exports = NoopSpan;
  * @author zhang xin
  */
 function NoopSpan(traceContext) {
-  this._traceContext = traceContext;
+    this._traceContext = traceContext;
 }
 
 NoopSpan.prototype.start = function() {
@@ -36,20 +36,20 @@ NoopSpan.prototype.finish = function() {
 };
 
 NoopSpan.prototype.traceContext = function() {
-  return this._traceContext;
+    return this._traceContext;
 };
 
 
 NoopSpan.prototype.isEntrySpan = function() {
-  return false;
+    return false;
 };
 
 NoopSpan.prototype.isExitSpan = function() {
-  return false;
+    return false;
 };
 
 NoopSpan.prototype.isLocalSpan = function() {
-  return false;
+    return false;
 };
 
 NoopSpan.prototype.tag = function(key, value) {
@@ -62,7 +62,7 @@ NoopSpan.prototype.ref = function(traceSegmentRef) {
 };
 
 NoopSpan.prototype.getSpanId = function() {
-  return -1;
+    return -1;
 };
 
 NoopSpan.prototype.fetchPeerInfo = function(
