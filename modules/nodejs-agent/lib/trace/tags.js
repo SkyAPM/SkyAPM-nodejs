@@ -14,29 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+"use strict";
 
 let Tags = function() {
-  this.DB_TYPE = new Tag("db.type");
-  this.DB_INSTANCE = new Tag("db.instance");
-  this.DB_STATEMENT = new Tag("db.statement");
+    this.DB_TYPE = new Tag("db.type");
+    this.DB_INSTANCE = new Tag("db.instance");
+    this.DB_STATEMENT = new Tag("db.statement");
 };
 
 let Tag = function(key) {
-  this._key = key;
+    this._key = key;
 
-  this.tag = function(span, value) {
-    span.tag.apply(span, [this._key, value]);
-  };
+    this.tag = function(span, value) {
+        span.tag.apply(span, [this._key, value]);
+    };
 };
 
 
 Tags.instance = null;
 
 Tags.getInstance = function() {
-  if (this.instance === null) {
-    this.instance = new Tags();
-  }
-  return this.instance;
+    if (this.instance === null) {
+        this.instance = new Tags();
+    }
+    return this.instance;
 };
 
 module.exports = Tags.getInstance();

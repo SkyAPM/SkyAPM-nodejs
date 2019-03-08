@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+"use strict";
 
 module.exports = KeyValuePair;
 
@@ -25,14 +26,14 @@ module.exports = KeyValuePair;
  * @author zhang xin
  */
 function KeyValuePair(key, value) {
-  this.key = key;
-  this.value = value;
+    this.key = key;
+    this.value = value;
 }
 
 KeyValuePair.prototype.getKey = function() {
-  return this.key;
+    return this.key;
 };
 
 KeyValuePair.prototype.getValue = function() {
-  return this.value;
+    return this.value;
 };

@@ -16,6 +16,7 @@
  */
 
 "use strict";
+
 const onFinished = require("on-finished");
 const ContextCarrier = require("../../trace/context-carrier");
 const layerDefine = require("../../trace/span-layer");
