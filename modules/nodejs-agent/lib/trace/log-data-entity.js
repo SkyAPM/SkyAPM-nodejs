@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+"use strict";
 
 module.exports = LogDataEntity;
 
@@ -25,14 +26,14 @@ module.exports = LogDataEntity;
  * @author zhang xin
  */
 function LogDataEntity(timestamp, logs) {
-  this._timestamp = timestamp;
-  this._data = logs;
+    this._timestamp = timestamp;
+    this._data = logs;
 }
 
 LogDataEntity.prototype.getTimestamp = function() {
-  return this._timestamp;
+    return this._timestamp;
 };
 
 LogDataEntity.prototype.getData = function() {
-  return this._data;
+    return this._data;
 };

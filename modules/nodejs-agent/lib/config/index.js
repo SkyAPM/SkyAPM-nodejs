@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+"use strict";
 
 const uuid = require("uuid/v4");
 
@@ -27,7 +28,7 @@ function AgentConfig() {
     this._serviceId = undefined;
     this._instanceId = undefined;
     this._directServices = undefined;
-    this._instanceUUID = uuid();
+    this._instanceUUID = undefined;
 };
 
 AgentConfig.prototype.getServiceId = function() {
@@ -68,6 +69,7 @@ AgentConfig.prototype.initConfig = function(agentOptions) {
     }
     this._serviceName = agentOptions.serviceName || process.env.SW_SERVICE_NAME || "You Application";
     this._directServices = agentOptions.directServers || process.env.SW_DIRECT_SERVERS || "localhost:11800";
+    this._instanceUUID = agentOptions.instanceUUID || uuid();
 };
 
 
