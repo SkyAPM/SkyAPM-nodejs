@@ -33,6 +33,7 @@ module.exports = hook;
 function hook(modules, requireCallback) {
     const enhancedModuleCache = {};
     const _origRequire = Module.prototype.require;
+    let progressingHookFiles = {};
     Module.prototype.require = function(request) {
         let filename = Module._resolveFilename(request, this);
         let core = filename.indexOf(path.sep) === -1;
@@ -45,7 +46,17 @@ function hook(modules, requireCallback) {
             return enhancedModuleCache[filename];
         }
 
+        // check current module is in progressing,
+        // if yes, ignore it
+        let progressing = progressingHookFiles[filename];
+        if (!progressing) {
+            progressingHookFiles[filename] = true;
+        }
+
         let exports = _origRequire.apply(this, arguments);
+        if (progressing) return exports;
+        delete progressingHookFiles[filename];
+
         if (core) {
             moduleName = filename;
             enhanceFile = filename;
