@@ -41,11 +41,13 @@
     "js-base64": "^2.5.1",
     "object-hash": "^1.3.1",
     "on-finished": "^2.3.0",
+    "randomatic": "^3.1.1",
     "resolve": "^1.8.1",
     "semver": "^5.5.1",
     "uuid": "^3.2.1"
   },
   "devDependencies": {
+    "cz-conventional-changelog": "^2.1.0",
     "eslint": "^4.19.1",
     "eslint-config-google": "^0.9.1",
     "eslint-plugin-header": "^1.2.0",
@@ -58,5 +60,10 @@
     "lib/network/common/*.js",
     "lib/network/language-agent-v2/*.js",
     "lib/network/register/*.js"
-  ]
+  ],
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
 }
