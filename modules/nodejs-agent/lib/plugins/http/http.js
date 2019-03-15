@@ -38,9 +38,9 @@ module.exports = function(httpModule, instrumentation, contextManager) {
     return httpModule;
 
     /**
-     * 
-     * @param endpointName
-     * @returns {*}
+     * filterParams
+     * @param {endpointName} endpointName
+     * @return {*}
      */
     function filterParams(endpointName) {
         if (endpointName && endpointName.indexOf("?") > -1) {
