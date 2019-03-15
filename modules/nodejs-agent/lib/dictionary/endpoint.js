@@ -30,7 +30,7 @@ const configAgent = require("../config");
  */
 function EndpointKey(endpointName, isEntry, isExit) {
     let filterParams = function(endpointName) {
-        if(endpointName && endpointName.indexOf("?") > -1){
+        if (endpointName && endpointName.indexOf("?") > -1) {
             // filter params
             return endpointName.split("?")[0];
         }
