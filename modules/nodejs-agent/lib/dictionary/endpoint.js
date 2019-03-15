@@ -29,8 +29,16 @@ const configAgent = require("../config");
  * @author Zhang Xin
  */
 function EndpointKey(endpointName, isEntry, isExit) {
+    let filterParams = function(endpointName) {
+        if(endpointName&&endpointName.indexOf("?")>-1){
+            //filter params
+            return endpointName.split("?")[0];
+        }
+        return endpointName;
+    };
+
     this._serviceId = configAgent.getServiceId();
-    this._endpointName = endpointName;
+    this._endpointName = filterParams(endpointName);
     this._isEntry = isEntry;
     this._isExit = isExit;
 }

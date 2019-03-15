@@ -37,7 +37,7 @@ Utils.prototype.compare = function(x, y) {
         if (!Object.equals(x[p], y[p])) return false;
     }
 
-    for (p in y) {
+    for (let p in y) {
         if (y.hasOwnProperty(p) && !x.hasOwnProperty(p)) return false;
     }
 
