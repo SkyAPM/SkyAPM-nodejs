@@ -63,7 +63,7 @@ RegisterService.prototype.launch = function() {
                             os_name: os.platform(),
                             host_name: os.hostname(),
                             process_no: process.pid + "",
-                            language: "Node.js",
+                            language: "nodejs",
                             ipV4s: getAllIPv4Address(),
                         },
                         instanceUUID: function() {
