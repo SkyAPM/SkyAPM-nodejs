@@ -20,6 +20,7 @@ module.exports = ID;
 
 const AgentConfig = require("../config");
 const process = require("process");
+const randomize = require("randomatic");
 
 /**
  * @param {idParts} idParts
@@ -33,10 +34,9 @@ function ID(idParts) {
         this._part3 = idParts.part3;
     } else {
         this._part1 = AgentConfig.getInstanceId();
-        this._part2 = process.pid *
-        process.ppid ? process.ppid : (((1 + Math.random()) * 0x10000) | 0)
-            + (((1 + Math.random()) * 0x10000) | 0);
-        this._part3 = Number(process.hrtime().join(""));
+        this._part2 = (process.pid * process.ppid ? process.ppid : (((1 + Math.random()) * 0x10000) | 0)
+            + (((1 + Math.random()) * 0x10000) | 0)) + Number(randomize("0", 5));
+        this._part3 = Number(process.hrtime().join("")) + Number(randomize("0", 9));
     }
 }
 
