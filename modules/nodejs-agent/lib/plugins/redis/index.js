@@ -20,7 +20,7 @@
 const Plugin = require("../plugin");
 
 module.exports = new Plugin("redis-plugin", "redis", [{
-    _name: "node",
+    _name: "",
     _description: "Only enhancements to node_redis",
     _enhanceModules: ["redis"],
     canEnhance: function(version, enhanceFile) {
@@ -30,7 +30,7 @@ module.exports = new Plugin("redis-plugin", "redis", [{
         return false;
     },
     getInterceptor: function(enhanceFile) {
-        return require("./" + this._name + "/" + enhanceFile);
+        return require("./" + enhanceFile);
     },
 }]);
 

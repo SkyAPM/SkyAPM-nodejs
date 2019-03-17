@@ -17,9 +17,9 @@
 
 "use strict";
 
-const spanLayer = require("../../../trace/span-layer");
-const componentDefine = require("../../../trace/component-define");
-const Tags = require("../../../trace/tags");
+const spanLayer = require("../../trace/span-layer");
+const componentDefine = require("../../trace/component-define");
+const Tags = require("../../trace/tags");
 
 /**
  * @param {originModule} originModule
@@ -71,9 +71,9 @@ function enhanceCommandsMethod(obj, instrumentation, contextManager) {
             Tags.DB_TYPE.tag(span, "Redis");
             Tags.DB_INSTANCE.tag(span, connection.selected_db);
             Tags.DB_STATEMENT.tag(span, command_obj.command);
-            contextManager.finishSpan(span);
             // eslint-disable-next-line camelcase
             const result = original.apply(this, [command_obj]);
+            contextManager.finishSpan(span);
             return result;
         };
     }
