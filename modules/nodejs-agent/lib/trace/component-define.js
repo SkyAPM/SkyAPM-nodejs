@@ -38,6 +38,7 @@ OfficeComponent.prototype.getName = function() {
 let Components = function() {
     this.HTTP = new OfficeComponent(2, "HTTP");
     this.MYSQL = new OfficeComponent(5, "MYSQL");
+    this.REDIS = new OfficeComponent(7, "REDIS");
     this.EGG = new OfficeComponent(4003, "Egg");
 };
 
