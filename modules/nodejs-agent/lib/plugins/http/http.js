@@ -38,6 +38,19 @@ module.exports = function(httpModule, instrumentation, contextManager) {
     return httpModule;
 
     /**
+     * filterParams
+     * @param {endpointName} endpointName
+     * @return {*}
+     */
+    function filterParams(endpointName) {
+        if (endpointName && endpointName.indexOf("?") > -1) {
+            // filter params
+            return endpointName.split("?")[0];
+        }
+        return endpointName;
+    }
+
+    /**
      *
      * @param {original} original
      * @return {function(*, *, *=): *}
@@ -53,7 +66,7 @@ module.exports = function(httpModule, instrumentation, contextManager) {
                     return undefined;
                 });
 
-                let span = contextManager.createEntrySpan(req.url, contextCarrier);
+                let span = contextManager.createEntrySpan(filterParams(req.url), contextCarrier);
                 span.component(componentDefine.Components.HTTP);
                 span.spanLayer(layerDefine.Layers.HTTP);
                 onFinished(res, function(err) {
@@ -81,7 +94,7 @@ module.exports = function(httpModule, instrumentation, contextManager) {
     function wrapRequest(original) {
         return function(options, callback) {
             let contextCarrier = new ContextCarrier();
-            let span = contextManager.createExitSpan(options.path, options.host + ":" + options.port, contextCarrier);
+            let span = contextManager.createExitSpan(options.pathname, options.host + ":" + options.port, contextCarrier);
             contextCarrier.pushBy(function(key, value) {
                 if (!options.hasOwnProperty("headers")) {
                     options.headers = {};
