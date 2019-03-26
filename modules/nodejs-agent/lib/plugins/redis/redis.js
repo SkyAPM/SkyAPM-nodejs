@@ -51,18 +51,19 @@ module.exports = function(originModule, instrumentation, contextManager) {
  * @param {obj} obj
  * @param {instrumentation} instrumentation
  * @param {contextManager} contextManager
- * @return {wrappedMethod}
  */
 function enhanceCommandsMethod(obj, instrumentation, contextManager) {
     let connection = obj;
-    return instrumentation.enhanceMethod(obj, "internal_send_command", commandInterceptor);
+    let commandQueue = obj.command_queue;
+    instrumentation.enhanceMethod(commandQueue, "push", pushInterceptor);
+    instrumentation.enhanceMethod(commandQueue, "shift", shiftInterceptor);
 
     /**
      *
      * @param {original} original
      * @return {function(*=, *=, *=): *}
      */
-    function commandInterceptor(original) {
+    function pushInterceptor(original) {
         // eslint-disable-next-line camelcase
         return function(command_obj) {
             let span = contextManager.createExitSpan("Redis/command", connection.address);
@@ -70,10 +71,23 @@ function enhanceCommandsMethod(obj, instrumentation, contextManager) {
             span.spanLayer(spanLayer.Layers.CACHE);
             Tags.DB_TYPE.tag(span, "Redis");
             Tags.DB_INSTANCE.tag(span, connection.selected_db);
-            Tags.DB_STATEMENT.tag(span, command_obj.command);
+            Tags.DB_STATEMENT.tag(span, command_obj.command + "args:" + command_obj.args.toString());
+            command_obj["_span"] = span;
             // eslint-disable-next-line camelcase
             const result = original.apply(this, [command_obj]);
-            contextManager.finishSpan(span);
+            return result;
+        };
+    }
+
+    /**
+     *
+     * @param {original} original
+     * @return {function(*=, *=, *=): *}
+     */
+    function shiftInterceptor(original) {
+        return function() {
+            const result = original.apply(this, arguments);
+            contextManager.finishSpan(result["_span"]);
             return result;
         };
     }
