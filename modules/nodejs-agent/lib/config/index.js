@@ -64,11 +64,8 @@ AgentConfig.prototype.instanceUUID = function() {
 };
 
 AgentConfig.prototype.initConfig = function(agentOptions) {
-    if (!agentOptions.hasOwnProperty("serviceName")) {
-        throw new Error("service name cannot be empty");
-    }
-    this._serviceName = agentOptions.serviceName || process.env.SW_SERVICE_NAME || "You Application";
-    this._directServices = agentOptions.directServers || process.env.SW_DIRECT_SERVERS || "localhost:11800";
+    this._serviceName = process.env.SW_SERVICE_NAME || (agentOptions && agentOptions.serviceName) || "You Application";
+    this._directServices = process.env.SW_DIRECT_SERVERS || (agentOptions && agentOptions.directServers) || "localhost:11800";
     this._instanceUUID = agentOptions.instanceUUID || uuid();
 };
 
