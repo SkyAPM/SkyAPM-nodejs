@@ -54,40 +54,35 @@ module.exports = function(originModule, instrumentation, contextManager) {
  */
 function enhanceCommandsMethod(obj, instrumentation, contextManager) {
     let connection = obj;
-    let commandQueue = obj.command_queue;
-    instrumentation.enhanceMethod(commandQueue, "push", pushInterceptor);
-    instrumentation.enhanceMethod(commandQueue, "shift", shiftInterceptor);
+    instrumentation.enhanceMethod(obj, "internal_send_command", commandInterceptor);
 
     /**
      *
      * @param {original} original
      * @return {function(*=, *=, *=): *}
      */
-    function pushInterceptor(original) {
+    function commandInterceptor(original) {
         // eslint-disable-next-line camelcase
         return function(command_obj) {
-            let span = contextManager.createExitSpan("Redis/command", connection.address);
+            let span = contextManager.createExitSpan("Redis/" + command_obj.command, connection.address);
             span.component(componentDefine.Components.REDIS);
             span.spanLayer(spanLayer.Layers.CACHE);
             Tags.DB_TYPE.tag(span, "Redis");
             Tags.DB_INSTANCE.tag(span, connection.selected_db);
-            Tags.DB_STATEMENT.tag(span, command_obj.command + "args:" + command_obj.args.toString());
-            command_obj["_span"] = span;
+            Tags.DB_STATEMENT.tag(span, command_obj.command + " args: " + command_obj.args.toString());
             // eslint-disable-next-line camelcase
             const result = original.apply(this, [command_obj]);
-            return result;
-        };
-    }
-
-    /**
-     *
-     * @param {original} original
-     * @return {function(*=, *=, *=): *}
-     */
-    function shiftInterceptor(original) {
-        return function() {
-            const result = original.apply(this, arguments);
-            contextManager.finishSpan(result["_span"]);
+            let callback = command_obj.callback;
+            if (typeof command_obj.callback === "function") {
+                command_obj.callback = instrumentation.enhanceCallback(span.traceContext(), contextManager, function() {
+                    contextManager.finishSpan(span);
+                    return callback.apply(this, arguments);
+                });
+            } else {
+                command_obj.callback = instrumentation.enhanceCallback(span.traceContext(), contextManager, function() {
+                    contextManager.finishSpan(span);
+                });
+            }
             return result;
         };
     }
