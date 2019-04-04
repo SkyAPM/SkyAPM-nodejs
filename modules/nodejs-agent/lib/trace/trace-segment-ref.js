@@ -79,7 +79,7 @@ TraceSegmentRef.prototype.fetchEntryOperationNameInfo = function(
     if (this._entryOperationName) {
         return unregisterCallback(this._entryOperationName);
     } else {
-        return registerCallback(this._entryOperationId());
+        return registerCallback(this._entryOperationId);
     }
     return this._entryOperationName;
 };
