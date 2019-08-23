@@ -15,10 +15,10 @@ Skywalking provide two deploy mode, one is standalone mode and the other is clus
 ## Modify start script
 Add the following the stuff to the start script
 ```
---require sw-egg-script --sw_pplication_code=Your_application_code --sw_direct_Servers=Collector_remote_grpc_address
+--require skyapm-egg-require --sw_service_name=Your_service_name --sw_direct_Servers=Collector_remote_grpc_address
 ```
 
-* `Your_application_code`: It used to differentiate between different applications. the value will be shown in WebUI.
+* `Your_service_name`: It used to differentiate between different services. the value will be shown in WebUI.
 * `Collector_agent_grpc_address`: This value should be consistent with the `agent_gRPC.gRPC` configuration items in the application.yml in the Collector project. (default value: localhost:11800)
 
 

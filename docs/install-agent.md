@@ -10,13 +10,14 @@ require and start the agent in your application’s main file.
 
 ```javascript
 require('skyapm-nodejs').start({
-    // Application code is showed in sky-walking-ui. Suggestion: set an unique name for each application, one
-    // application's nodes share the same code.
+    // Service name is showed in sky-walking-ui. Suggestion: set an unique name for each service, one
+    // service's nodes share the same code.
     // this value cannot be empty.
     serviceName: 'test',
     // Collector agent_gRPC/grpc service addresses.
     // default value: localhost:11800
     directServers: 'localhost:11800'
 });
+```
 
 *NOTE*: If your application is using egg framework. please read the [deploy agent in egg framework](how-to-deploy-agent-in-egg-framework.md).

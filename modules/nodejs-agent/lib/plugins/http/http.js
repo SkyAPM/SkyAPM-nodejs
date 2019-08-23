@@ -94,7 +94,7 @@ module.exports = function(httpModule, instrumentation, contextManager) {
     function wrapRequest(original) {
         return function(options, callback) {
             let contextCarrier = new ContextCarrier();
-            let span = contextManager.createExitSpan(options.pathname, options.host + ":" + options.port, contextCarrier);
+            let span = contextManager.createExitSpan(options.path, options.host + ":" + options.port, contextCarrier);
             contextCarrier.pushBy(function(key, value) {
                 if (!options.hasOwnProperty("headers")) {
                     options.headers = {};
