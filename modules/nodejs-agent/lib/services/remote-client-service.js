@@ -53,7 +53,10 @@ RemoteClient.prototype.launch = function() {
 RemoteClient.prototype.sendTraceData = function(traces) {
     let that = this;
 
-    let call = this._tracerSender.collect(function(error, commands) {
+    let meta = new grpc.Metadata();
+    meta.add("Authentication", AgentConfig.getAuthentication());
+
+    let call = this._tracerSender.collect(meta, function(error, commands) {
         if (error) {
             logger.error("remote-client-service", "Failed to register network address. error message: %s", error.message);
             that.dealWithError(error);
@@ -95,7 +98,10 @@ RemoteClient.prototype.registerNetwork = function(networkes, callback) {
         networkesK = networkes.next();
     }
 
-    this._register.doNetworkAddressRegister(networkParameter,
+    let meta = new grpc.Metadata();
+    meta.add("Authentication", AgentConfig.getAuthentication());
+
+    this._register.doNetworkAddressRegister(networkParameter, meta,
         function(err, response) {
             if (err) {
                 logger.error("remote-client-service",
@@ -118,7 +124,7 @@ RemoteClient.prototype.registerNetwork = function(networkes, callback) {
 RemoteClient.prototype.registerEndpoint = function(endpoints, callback) {
     let that = this;
 
-    let endpointsParameteres = new RegisterParameteres.Enpoints();
+    let endpointsParameteres = new RegisterParameteres.Endpoints();
     endpoints.forEach(function(endpoint) {
         let endpointParameter = new RegisterParameteres.Endpoint();
         endpointParameter.setServiceid(endpoint.serviceId());
@@ -135,7 +141,10 @@ RemoteClient.prototype.registerEndpoint = function(endpoints, callback) {
         endpointsParameteres.addEndpoints(endpointParameter);
     });
 
-    this._register.doEndpointRegister(endpointsParameteres,
+    let meta = new grpc.Metadata();
+    meta.add("Authentication", AgentConfig.getAuthentication());
+
+    this._register.doEndpointRegister(endpointsParameteres, meta,
         function(err, response) {
             if (err) {
                 logger.error("remote-client-service",
@@ -165,15 +174,18 @@ RemoteClient.prototype.registerEndpoint = function(endpoints, callback) {
         });
 };
 
-RemoteClient.prototype.registerService = function(
-    serviceName, successCallback, callback) {
+RemoteClient.prototype.registerService = function(serviceName, successCallback, callback) {
     let that = this;
 
     let servicesParameter = new RegisterParameteres.Services();
     let serviceParameter = new RegisterParameteres.Service();
     serviceParameter.setServicename(serviceName);
     servicesParameter.addServices(serviceParameter);
-    this._register.doServiceRegister(servicesParameter, function(err, response) {
+
+    let meta = new grpc.Metadata();
+    meta.add("Authentication", AgentConfig.getAuthentication());
+
+    this._register.doServiceRegister(servicesParameter, meta, function(err, response) {
         if (err) {
             logger.error("remote-client-service", "Failed to register service name %s . error message: %s", serviceName,
                 err.message);
@@ -192,8 +204,7 @@ RemoteClient.prototype.registerService = function(
     });
 };
 
-RemoteClient.prototype.registerInstance = function(
-    serviceId, opts, successCallback, callback) {
+RemoteClient.prototype.registerInstance = function(serviceId, opts, successCallback, callback) {
     let that = this;
 
     let serviceInstancesParameter = new RegisterParameteres.ServiceInstances();
@@ -222,7 +233,10 @@ RemoteClient.prototype.registerInstance = function(
     serviceInstanceParameter.setPropertiesList(osInfoProperties);
     serviceInstancesParameter.addInstances(serviceInstanceParameter);
 
-    this._register.doServiceInstanceRegister(serviceInstancesParameter,
+    let meta = new grpc.Metadata();
+    meta.add("Authentication", AgentConfig.getAuthentication());
+
+    this._register.doServiceInstanceRegister(serviceInstancesParameter, meta,
         function(err, response) {
             if (err) {
                 logger.error("remote-client-service", "Failed to register instance of service %s. error message: %s",
