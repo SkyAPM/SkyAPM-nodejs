@@ -20,8 +20,7 @@ module.exports = TraceSegmentRef;
 
 const ID = require("./trace-segment-id");
 
-const TraceSegmentParameteres = require("../network/language-agent-v2/trace_pb");
-const TraceCommonParameteres = require("../network/common/trace-common_pb");
+const TraceSegmentParameteres = require("../network/language-agent/Tracing_pb");
 
 /**
  *
@@ -30,8 +29,6 @@ const TraceCommonParameteres = require("../network/common/trace-common_pb");
  * @author zhang xin
  */
 function TraceSegmentRef(contextCarrier) {
-    let that = this;
-
     this.type = "CROSS_PROCESS";
     let idSegment = contextCarrier.getTraceSegmentId().split(".");
     this._traceSegmentId = new ID({
@@ -39,30 +36,13 @@ function TraceSegmentRef(contextCarrier) {
         part2: idSegment[1],
         part3: idSegment[2],
     });
+
     this._spanId = contextCarrier.getSpanId();
-
-    this._entryApplicationInstanceId = contextCarrier.getEntryApplicationInstanceId();
-    this._parentApplicationInstanceId = contextCarrier.getParentApplicationInstanceId();
-
-    contextCarrier.fetchPeerHostInfo(function(peerId) {
-        that._peerId = peerId;
-    }, function(peerHost) {
-        that._peerHost = peerHost;
-    });
-
-    contextCarrier.fetchEntryOperationNameInfo(function(operationId) {
-        that._entryOperationId = operationId;
-    }, function(operationName) {
-        that._entryOperationName = operationName;
-    });
-
-    contextCarrier.fetchParentOperationNameInfo(function(parentOperationId) {
-        that._parentOperationId = parentOperationId;
-    }, function(parentOperationName) {
-        that._parentOperationName = parentOperationName;
-    });
-
-    let primaryDistributedTraceId = contextCarrier.getPrimaryDistributedTraceId().split(".");
+    this._parentServiceInstance = contextCarrier.getParentServiceInstance();
+    this._parentService = contextCarrier.getParentServiceInstance();
+    this._peerHost = contextCarrier.getAddressUsedAtClient();
+    this._parentOperationName = contextCarrier.getParentEndpoint();
+    let primaryDistributedTraceId = contextCarrier.getTraceId().split(".");
     this._primaryDistributedTraceId = new ID({
         part1: primaryDistributedTraceId[0],
         part2: primaryDistributedTraceId[1],
@@ -70,69 +50,27 @@ function TraceSegmentRef(contextCarrier) {
     });
 }
 
-TraceSegmentRef.prototype.getTraceSegmentId = function() {
-    return this._traceSegmentId;
-};
-
-TraceSegmentRef.prototype.fetchEntryOperationNameInfo = function(
-    registerCallback, unregisterCallback) {
-    if (this._entryOperationName) {
-        return unregisterCallback(this._entryOperationName);
-    } else {
-        return registerCallback(this._entryOperationId);
-    }
-    return this._entryOperationName;
-};
-
-
-TraceSegmentRef.prototype.getEntryApplicationInstanceId = function() {
-    return this._entryApplicationInstanceId;
-};
-
-
 TraceSegmentRef.prototype.getPrimaryDistributedTraceId = function() {
     return this._primaryDistributedTraceId;
 };
 
 TraceSegmentRef.prototype.transform = function() {
     let serializedTraceSegmentRef = new TraceSegmentParameteres.SegmentReference();
-    serializedTraceSegmentRef.setReftype(TraceCommonParameteres.RefType.CROSSPROCESS);
+    serializedTraceSegmentRef.setReftype(TraceSegmentParameteres.RefType.CROSSPROCESS);
 
     /**
      * @param {traceSegmentId} traceSegmentId
      * @return {TraceSegmentServiceParameters.UniqueId}
      */
     function buildUniqueId(traceSegmentId) {
-        let serializedUniqueId = new TraceCommonParameteres.UniqueId();
-        serializedUniqueId.addIdparts(traceSegmentId.part1());
-        serializedUniqueId.addIdparts(traceSegmentId.part2());
-        serializedUniqueId.addIdparts(traceSegmentId.part3());
-        return serializedUniqueId;
+        return traceSegmentId.part1() + "." + traceSegmentId.part2() + "." + traceSegmentId.part3();
     }
-
+    serializedTraceSegmentRef.setTraceid(buildUniqueId(this._primaryDistributedTraceId))
     serializedTraceSegmentRef.setParenttracesegmentid(buildUniqueId(this._traceSegmentId));
     serializedTraceSegmentRef.setParentspanid(this._spanId);
-    serializedTraceSegmentRef.setParentserviceinstanceid(this._parentApplicationInstanceId);
-
-    if (this._peerHost) {
-        serializedTraceSegmentRef.setNetworkaddress(this._peerHost);
-    } else {
-        serializedTraceSegmentRef.setNetworkaddressid(this._peerId);
-    }
-
-    serializedTraceSegmentRef.setEntryserviceinstanceid(this._entryApplicationInstanceId);
-
-    if (this._entryOperationName) {
-        serializedTraceSegmentRef.setEntryendpoint(this._entryOperationName);
-    } else {
-        serializedTraceSegmentRef.setEntryendpointid(this._entryOperationId);
-    }
-
-    if (this._parentOperationName) {
-        serializedTraceSegmentRef.setParentendpoint(this._parentOperationName);
-    } else {
-        serializedTraceSegmentRef.setParentendpointid(this._parentOperationId);
-    }
-
+    serializedTraceSegmentRef.setParentservice(this._parentService);
+    serializedTraceSegmentRef.setParentserviceinstance(this._parentServiceInstance);
+    serializedTraceSegmentRef.setNetworkaddressusedatpeer(this._peerHost);
+    serializedTraceSegmentRef.setParentendpoint(this._parentOperationName);
     return serializedTraceSegmentRef;
 };

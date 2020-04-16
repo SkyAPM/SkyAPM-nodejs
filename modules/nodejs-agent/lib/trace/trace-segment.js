@@ -23,8 +23,7 @@ const ID = require("./trace-segment-id");
 const agentConfig = require("../config");
 const traceSegmentCache = require("../cache");
 
-const TraceCommonParameteres = require("../network/common/trace-common_pb");
-const TraceSegmentParameteres = require("../network/language-agent-v2/trace_pb");
+const TraceSegmentParameteres = require("../network/language-agent/Tracing_pb");
 
 /**
  * @author zhang xin
@@ -35,7 +34,7 @@ function TraceSegment() {
     this._runningSpanSize = 0;
     this._spanIdGenerator = 0;
     this._entryOperationName = undefined;
-    this._entryOperationId = undefined;
+    this._traceId = new ID();
     this._refs = [];
 }
 
@@ -58,11 +57,7 @@ TraceSegment.prototype.finish = function() {
 TraceSegment.prototype.generateSpanId = function(spanOptions, callback) {
     this._runningSpanSize++;
     if (this._spanIdGenerator == 0) {
-        if (spanOptions["operationName"]) {
-            this._entryOperationName = spanOptions["operationName"];
-        } else {
-            this._entryOperationId = spanOptions["operationId"];
-        }
+        this._entryOperationName = spanOptions["operationName"];
     }
     return callback(this._spanIdGenerator++);
 };
@@ -79,17 +74,19 @@ TraceSegment.prototype.fetchRefsInfo = function(hasRefCallback, noRefCallback) {
     }
 };
 
-TraceSegment.prototype.fetchEntryOperationNameInfo = function(
-    registerCallback, unregisterCallback) {
-    if (this._entryOperationName) {
-        return unregisterCallback(this._entryOperationName);
+TraceSegment.prototype.traceId = function(){
+    if (this._refs.length > 0) {
+        return this._refs[0].getPrimaryDistributedTraceId();
     } else {
-        return registerCallback(this._entryOperationId);
+        return this._traceId;
     }
+}
+
+TraceSegment.prototype.entryOperationName = function() {
+    return this._entryOperationName;
 };
 
 TraceSegment.prototype.transform = function() {
-    let serializedSegment = new TraceCommonParameteres.UpstreamSegment();
     let serializeTraceSegmentObject = new TraceSegmentParameteres.SegmentObject();
 
     /**
@@ -97,29 +94,23 @@ TraceSegment.prototype.transform = function() {
      * @return {TraceSegmentServiceParameters.UniqueId}
      */
     function buildTraceSegmentId(traceSegmentId) {
-        let serializeTraceSegmentId = new TraceCommonParameteres.UniqueId();
-        serializeTraceSegmentId.addIdparts(traceSegmentId.part1());
-        serializeTraceSegmentId.addIdparts(traceSegmentId.part2());
-        serializeTraceSegmentId.addIdparts(traceSegmentId.part3());
-        return serializeTraceSegmentId;
+        return traceSegmentId.part1() + "." + traceSegmentId.part2() + "." + traceSegmentId.part3();
     }
 
     serializeTraceSegmentObject.setTracesegmentid(buildTraceSegmentId(this._traceSegmentId));
     this._finishedSpan.forEach(function(span) {
         serializeTraceSegmentObject.addSpans(span.transform());
     });
-    serializeTraceSegmentObject.setServiceid(agentConfig.getServiceId());
-    serializeTraceSegmentObject.setServiceinstanceid(agentConfig.getInstanceId());
+
+    serializeTraceSegmentObject.setService(agentConfig.getServiceName());
+    serializeTraceSegmentObject.setServiceinstance(agentConfig.getInstanceName());
     serializeTraceSegmentObject.setIssizelimited(false);
 
     if (this._refs.length > 0) {
-        this._refs.forEach(function(ref) {
-            serializedSegment.addGlobaltraceids(buildTraceSegmentId(ref.getPrimaryDistributedTraceId()));
-        });
+        serializeTraceSegmentObject.setTraceid(buildTraceSegmentId(this._refs[0].getPrimaryDistributedTraceId()));
     } else {
-        serializedSegment.addGlobaltraceids(buildTraceSegmentId(this._traceSegmentId));
+        serializeTraceSegmentObject.setTraceid(buildTraceSegmentId(this._traceId));
     }
-    serializedSegment.setSegment(serializeTraceSegmentObject.serializeBinary());
 
-    return serializedSegment;
+    return serializeTraceSegmentObject;
 };

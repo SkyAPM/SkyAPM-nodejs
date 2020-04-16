@@ -19,9 +19,14 @@
 
 const args = JSON.parse(process.argv.slice(2));
 let serviceName;
+let instanceName;
 let directServers;
 if (args.hasOwnProperty("sw_service_name")) {
     serviceName = args["sw_service_name"];
+}
+
+if (args.hasOwnProperty("sw_instance_name")) {
+    instanceName = args["sw_instance_name"];
 }
 
 if (args.hasOwnProperty("sw_direct_Servers")) {
@@ -30,5 +35,6 @@ if (args.hasOwnProperty("sw_direct_Servers")) {
 
 require("skyapm-nodejs").start({
     serviceName,
+    instanceName,
     directServers,
 });

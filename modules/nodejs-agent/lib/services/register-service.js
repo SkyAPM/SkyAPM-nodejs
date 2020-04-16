@@ -34,31 +34,15 @@ function RegisterService(serviceManager) {
 
 RegisterService.prototype.launch = function() {
     let that = this;
-
     async.waterfall([
         function registerService(successCallback) {
-            let _serviceId = undefined;
+            let registered = false;
             async.whilst(
                 function() {
-                    return _serviceId == undefined;
+                    return !registered;
                 },
                 function(callback) {
-                    that._serviceManager.remoteClientService().registerService(agentConfig.getServiceName(), function(serviceId) {
-                        logger.info("RegisterService", "Service[%s, %d] had register successfully.", agentConfig.getServiceName(), serviceId);
-                        _serviceId = serviceId;
-                        successCallback(null, serviceId);
-                    }, callback);
-                }
-            );
-        },
-        function registerInstance(serviceId, successCallback) {
-            let _instanceId = undefined;
-            async.whilst(
-                function() {
-                    return _instanceId == undefined;
-                },
-                function(callback) {
-                    that._serviceManager.remoteClientService().registerInstance(serviceId, {
+                    that._serviceManager.remoteClientService().reportInstanceProperties({
                         osInfo: {
                             os_name: os.platform(),
                             host_name: os.hostname(),
@@ -66,13 +50,10 @@ RegisterService.prototype.launch = function() {
                             language: "nodejs",
                             ipV4s: getAllIPv4Address(),
                         },
-                        instanceUUID: function() {
-                            return agentConfig.instanceUUID();
-                        },
-                    }, function(instanceId) {
-                        logger.info("RegisterService", "Instance[%s, %d] had register successfully.", agentConfig.getServiceName(), instanceId);
-                        _instanceId = instanceId;
-                        successCallback(null, serviceId, instanceId);
+                    }, function() {
+                        logger.info("RegisterService", "Service[%s, %d] had register successfully.", agentConfig.getServiceName());
+                        registered = true;
+                        successCallback(null);
                     }, callback);
                 }
             );
@@ -94,23 +75,18 @@ RegisterService.prototype.launch = function() {
                 return ipv4Address;
             }
         },
-        function changeConfiguration(serviceId, instanceId, callback) {
-            agentConfig.setServiceId(serviceId);
-            agentConfig.setInstanceId(instanceId);
-            callback(null, serviceId, instanceId);
-        },
-        function sendHeartBeat(serviceId, instanceID, callback) {
+        function keepAlive(callback) {
             async.forever(function(next) {
                 setTimeout(function() {
-                    logger.info("RegisterService", "The Service[%s, %d] send heart beat to Collector.", agentConfig.getServiceName(), agentConfig.getInstanceId());
-                    that._serviceManager.remoteClientService().sendHeartBeat(agentConfig.getInstanceId());
+                    logger.info("RegisterService", "The Service[%s, %d] send heart beat to Collector.", agentConfig.getServiceName(), agentConfig.getInstanceName());
+                    that._serviceManager.remoteClientService().keepAlive();
                     next();
-                }, 3 * 60 * 1000);
+                }, 30 * 1000);
             }, function(err) {
                 logger.error("RegisterService", "Failed to send heart beat of service %s. Reason: %s", agentConfig.getServiceName(), err.message);
             });
 
-            callback(null, serviceId, instanceID);
+            callback(null);
         },
     ], function(err, result) {
         if (err) {
