@@ -68,7 +68,7 @@ AgentConfig.prototype.initConfig = function(agentOptions) {
     this._serviceName = process.env.SW_SERVICE_NAME || (agentOptions && agentOptions.serviceName) || "You Application";
     this._directServices = process.env.SW_DIRECT_SERVERS || (agentOptions && agentOptions.directServers) || "localhost:11800";
     this._instanceUUID = agentOptions.instanceUUID || uuid();
-    this._authentication = agentOptions.authentication || "";
+    this._authentication = process.env.SW_AUTHENTICATION || (agentOptions && agentOptions.authentication) || "";
 };
 
 
