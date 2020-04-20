@@ -1,0 +1,40 @@
+name: Build
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+    tags:
+      - 'v*'
+
+jobs:
+  Build:
+    runs-on: ubuntu-18.04
+    timeout-minutes: 30
+    strategy:
+      matrix:
+        node-version: [8, 9]
+    steps:
+      - uses: actions/checkout@v2
+      - name: checkout submodules
+        shell: bash
+        run: |
+          git submodule sync --recursive
+          git -c protocol.version=2 submodule update --init --force --recursive --depth=1
+      - name: Cache node modules
+        uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Build & Test nodejs-agent
+        run: cd modules/nodejs-agent && npm install && npm run check && npm link
+      - name: Build & Test skyapm-egg-require
+        run: cd modules/skyapm-egg-require && npm link skyapm-nodejs && npm install && npm run check
