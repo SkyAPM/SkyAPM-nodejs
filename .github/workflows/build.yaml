@@ -34,7 +34,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - name: 'Build & Test'
-        run: |
-          cd modules/nodejs-agent && npm install && npm run check && npm link
-          cd modules/skyapm-egg-require && npm link skyapm-nodejs && npm install && npm run check
+      - name: Build & Test nodejs-agent
+        run: cd modules/nodejs-agent && npm install && npm run check && npm link
+      - name: Build & Test skyapm-egg-require
+        run: cd modules/skyapm-egg-require && npm link skyapm-nodejs && npm install && npm run check
