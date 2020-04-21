@@ -74,13 +74,13 @@ TraceSegment.prototype.fetchRefsInfo = function(hasRefCallback, noRefCallback) {
     }
 };
 
-TraceSegment.prototype.traceId = function(){
+TraceSegment.prototype.traceId = function() {
     if (this._refs.length > 0) {
         return this._refs[0].getPrimaryDistributedTraceId();
     } else {
         return this._traceId;
     }
-}
+};
 
 TraceSegment.prototype.entryOperationName = function() {
     return this._entryOperationName;

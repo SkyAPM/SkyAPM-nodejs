@@ -65,7 +65,8 @@ TraceSegmentRef.prototype.transform = function() {
     function buildUniqueId(traceSegmentId) {
         return traceSegmentId.part1() + "." + traceSegmentId.part2() + "." + traceSegmentId.part3();
     }
-    serializedTraceSegmentRef.setTraceid(buildUniqueId(this._primaryDistributedTraceId))
+
+    serializedTraceSegmentRef.setTraceid(buildUniqueId(this._primaryDistributedTraceId));
     serializedTraceSegmentRef.setParenttracesegmentid(buildUniqueId(this._traceSegmentId));
     serializedTraceSegmentRef.setParentspanid(this._spanId);
     serializedTraceSegmentRef.setParentservice(this._parentService);
