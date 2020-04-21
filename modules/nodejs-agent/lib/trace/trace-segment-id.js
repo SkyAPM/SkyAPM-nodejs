@@ -18,7 +18,6 @@
 
 module.exports = ID;
 
-const AgentConfig = require("../config");
 const process = require("process");
 const randomize = require("randomatic");
 
