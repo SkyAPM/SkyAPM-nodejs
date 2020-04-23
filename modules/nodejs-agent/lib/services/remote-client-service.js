@@ -158,11 +158,11 @@ RemoteClient.prototype.registerEndpoint = function(endpoints, callback) {
                     let isEntry = false;
                     let isExit = false;
 
-                    if (mapping.getFrom() == CommonParameteres.DetectPoint.SERVER) {
+                    if (mapping.getFrom() === CommonParameteres.DetectPoint.SERVER) {
                         isEntry = true;
                     }
 
-                    if (mapping.getFrom() == CommonParameteres.DetectPoint.CLIENT) {
+                    if (mapping.getFrom() === CommonParameteres.DetectPoint.CLIENT) {
                         isExit = true;
                     }
 
@@ -194,7 +194,7 @@ RemoteClient.prototype.registerService = function(serviceName, successCallback, 
 
         if (response && response.getServicesList().length > 0) {
             response.getServicesList().forEach(function(mapping) {
-                if (mapping.getKey() == serviceName) {
+                if (mapping.getKey() === serviceName) {
                     successCallback(mapping.getValue());
                 }
             });
@@ -246,7 +246,7 @@ RemoteClient.prototype.registerInstance = function(serviceId, opts, successCallb
 
             if (response && response.getServiceinstancesList().length > 0) {
                 response.getServiceinstancesList().forEach(function(mapping) {
-                    if (mapping.getKey() == AgentConfig.instanceUUID()) {
+                    if (mapping.getKey() === AgentConfig.instanceUUID()) {
                         successCallback(mapping.getValue());
                     }
                 });
@@ -271,7 +271,10 @@ RemoteClient.prototype.sendHeartBeat = function(instanceId) {
     instancePingPkg.setTime(new Date().getTime());
     instancePingPkg.setServiceinstanceuuid(AgentConfig.instanceUUID());
 
-    this._instancePinger.doPing(instancePingPkg, function(err, response) {
+    let meta = new grpc.Metadata();
+    meta.add("Authentication", AgentConfig.getAuthentication());
+
+    this._instancePinger.doPing(instancePingPkg, meta, function(err, response) {
         if (err) {
             logger.error("remote-client-service", "Failed to send heart beat of service %s.", AgentConfig.getServiceName());
             that.dealWithError(err);
@@ -281,11 +284,13 @@ RemoteClient.prototype.sendHeartBeat = function(instanceId) {
 };
 
 RemoteClient.prototype.dealWithError = function(err) {
-    if (err.code == 14) {
+    if (err.code === 14) {
         let newCollector = this._directServers[(this._nextDirectServersIndex++ % this._directServers.length)];
         logger.info("remote-client-service", "Attempt to connection collector[%s]. because of the previous collector cannot connect.",
             newCollector);
         this.connectRemote(newCollector);
+    } else {
+        logger.info("remote-client-service", "Unknown error: %s", err);
     }
 };
 
