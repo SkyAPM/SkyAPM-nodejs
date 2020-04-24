@@ -64,7 +64,7 @@ RegisterService.prototype.launch = function() {
                             host_name: os.hostname(),
                             process_no: process.pid + "",
                             language: "nodejs",
-                            ipV4s: getAllIPv4Address(),
+                            ipv4: getAllIPv4Address(),
                         },
                         instanceUUID: function() {
                             return agentConfig.instanceUUID();
