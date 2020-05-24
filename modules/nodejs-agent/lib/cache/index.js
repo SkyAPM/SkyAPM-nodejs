@@ -17,17 +17,17 @@
 "use strict";
 
 /**
- *
+ * @class TraceSegmentCachePool
  * @constructor
  * @author zhang xin
  */
 function TraceSegmentCachePool() {
     this._bucket = [];
-    this._bucketSize = Number.isSafeInteger(256);
+    this._bucketSize = 256;
     this._timeout = undefined;
     this._consumer = undefined;
     this._flushInterval = 1000;
-};
+}
 
 TraceSegmentCachePool.prototype.put = function(traceSegment) {
     this._bucket.push(traceSegment);
@@ -39,7 +39,7 @@ TraceSegmentCachePool.prototype.put = function(traceSegment) {
 };
 
 TraceSegmentCachePool.prototype.consumeData = function() {
-    if (this._bucket.length != 0) {
+    if (this._bucket.length !== 0) {
         this._consumer(this._bucket);
     }
     this._clear();
