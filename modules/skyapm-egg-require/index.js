@@ -17,9 +17,11 @@
 
 "use strict";
 
-const args = JSON.parse(process.argv.slice(2));
+const argString = process.argv.slice(2);
+const args = JSON.parse(argString && argString.length > 0 ? argString : "{}");
 let serviceName;
 let directServers;
+let authentication;
 if (args.hasOwnProperty("sw_service_name")) {
     serviceName = args["sw_service_name"];
 }
@@ -28,7 +30,12 @@ if (args.hasOwnProperty("sw_direct_Servers")) {
     directServers = args["sw_direct_Servers"];
 }
 
+if (args.hasOwnProperty("sw_authentication")) {
+    authentication = args["sw_authentication"];
+}
+
 require("skyapm-nodejs").start({
     serviceName,
     directServers,
+    authentication,
 });

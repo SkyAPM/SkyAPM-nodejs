@@ -29,6 +29,7 @@ function AgentConfig() {
     this._instanceId = undefined;
     this._directServices = undefined;
     this._instanceUUID = undefined;
+    this._authentication = undefined;
 };
 
 AgentConfig.prototype.getServiceId = function() {
@@ -67,7 +68,16 @@ AgentConfig.prototype.initConfig = function(agentOptions) {
     this._serviceName = process.env.SW_SERVICE_NAME || (agentOptions && agentOptions.serviceName) || "You Application";
     this._directServices = process.env.SW_DIRECT_SERVERS || (agentOptions && agentOptions.directServers) || "localhost:11800";
     this._instanceUUID = agentOptions.instanceUUID || uuid();
+    this._authentication = process.env.SW_AUTHENTICATION || (agentOptions && agentOptions.authentication) || "";
 };
 
+
+AgentConfig.prototype.getAuthentication = function() {
+    return this._authentication;
+};
+
+AgentConfig.prototype.setAuthentication = function(authentication) {
+    this._authentication = authentication;
+};
 
 module.exports = exports = new AgentConfig();

@@ -40,7 +40,7 @@ RegisterService.prototype.launch = function() {
             let _serviceId = undefined;
             async.whilst(
                 function() {
-                    return _serviceId == undefined;
+                    return _serviceId === undefined;
                 },
                 function(callback) {
                     that._serviceManager.remoteClientService().registerService(agentConfig.getServiceName(), function(serviceId) {
@@ -55,7 +55,7 @@ RegisterService.prototype.launch = function() {
             let _instanceId = undefined;
             async.whilst(
                 function() {
-                    return _instanceId == undefined;
+                    return _instanceId === undefined;
                 },
                 function(callback) {
                     that._serviceManager.remoteClientService().registerInstance(serviceId, {
@@ -64,7 +64,7 @@ RegisterService.prototype.launch = function() {
                             host_name: os.hostname(),
                             process_no: process.pid + "",
                             language: "nodejs",
-                            ipV4s: getAllIPv4Address(),
+                            ipv4: getAllIPv4Address(),
                         },
                         instanceUUID: function() {
                             return agentConfig.instanceUUID();
@@ -114,9 +114,9 @@ RegisterService.prototype.launch = function() {
         },
     ], function(err, result) {
         if (err) {
-            logger.error("RegisterService", "The service %s registed failed. Reason: %s", agentConfig.getServiceName(), err.message);
+            logger.error("RegisterService", "The service %s registered failed. Reason: %s", agentConfig.getServiceName(), err.message);
         } else {
-            logger.info("RegisterService", "The service %s has registered.");
+            logger.info("RegisterService", "The service %s has registered.", agentConfig.getServiceName());
         }
     });
 };
