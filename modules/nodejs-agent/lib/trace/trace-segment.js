@@ -27,6 +27,7 @@ const TraceCommonParameteres = require("../network/common/trace-common_pb");
 const TraceSegmentParameteres = require("../network/language-agent-v2/trace_pb");
 
 /**
+ * @class TraceSegment
  * @author zhang xin
  */
 function TraceSegment() {
@@ -46,9 +47,11 @@ TraceSegment.prototype.traceSegmentId = function() {
 TraceSegment.prototype.archive = function(span) {
     this._finishedSpan.push(span);
 
-    if ((--this._runningSpanSize) == 0) {
+    if ((--this._runningSpanSize) === 0) {
         this.finish();
+        return true;
     }
+    return false;
 };
 
 TraceSegment.prototype.finish = function() {
@@ -57,7 +60,7 @@ TraceSegment.prototype.finish = function() {
 
 TraceSegment.prototype.generateSpanId = function(spanOptions, callback) {
     this._runningSpanSize++;
-    if (this._spanIdGenerator == 0) {
+    if (this._spanIdGenerator === 0) {
         if (spanOptions["operationName"]) {
             this._entryOperationName = spanOptions["operationName"];
         } else {
