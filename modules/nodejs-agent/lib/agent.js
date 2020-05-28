@@ -33,6 +33,10 @@ function Agent() {
 }
 
 Agent.prototype.start = function(agentOptions) {
+    if (!!process.env.SW_ENABLED && process.env.SW_ENABLED !== "true") {
+        console.info("SW_ENABLED != true, the agent won't start");
+        return;
+    }
     AgentConfig.initConfig(agentOptions);
     serviceManager.launch();
 
@@ -45,7 +49,7 @@ Agent.prototype.start = function(agentOptions) {
         function(originModule, moduleName, version, enhanceFile) {
             let intercept = _pluginManager.attemptToFindInterceptor(moduleName, version, enhanceFile);
 
-            if (intercept == undefined) {
+            if (intercept === undefined) {
                 return originModule;
             }
 
