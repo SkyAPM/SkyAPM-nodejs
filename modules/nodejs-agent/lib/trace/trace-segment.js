@@ -26,6 +26,7 @@ const traceSegmentCache = require("../cache");
 const TraceSegmentParameteres = require("../network/language-agent/Tracing_pb");
 
 /**
+ * @class TraceSegment
  * @author zhang xin
  */
 function TraceSegment() {
@@ -45,9 +46,11 @@ TraceSegment.prototype.traceSegmentId = function() {
 TraceSegment.prototype.archive = function(span) {
     this._finishedSpan.push(span);
 
-    if ((--this._runningSpanSize) == 0) {
+    if ((--this._runningSpanSize) === 0) {
         this.finish();
+        return true;
     }
+    return false;
 };
 
 TraceSegment.prototype.finish = function() {

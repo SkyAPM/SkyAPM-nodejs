@@ -41,8 +41,11 @@ ContextManager.prototype.extract = function(contextCarrier) {
 
 ContextManager.prototype.finishSpan = function(span) {
     let finishTraceContext = span.traceContext();
-    finishTraceContext.finish(span);
-    this.active(finishTraceContext.parentTraceContext.apply(finishTraceContext, []));
+    if (finishTraceContext.finish(span)) {
+        this.active(undefined);
+    } else {
+        this.active(finishTraceContext.parentTraceContext.apply(finishTraceContext, []));
+    }
 };
 
 ContextManager.prototype.active = function(traceContext) {
@@ -64,7 +67,7 @@ ContextManager.prototype.createEntrySpan = function(
     this.active(span.traceContext());
 
     if (contextCarrier) {
-        span.traceContext().extract.apply(span.traceContext(), [contextCarrier, this._agentConfig]);
+        span.traceContext().extract.apply(span.traceContext(), [contextCarrier]);
     }
 
     return span;

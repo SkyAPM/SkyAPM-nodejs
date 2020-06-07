@@ -18,7 +18,7 @@
 "use strict";
 
 const argString = process.argv.slice(2);
-const args = JSON.parse(!argString && argString.length > 0 ? argString : "{}");
+const args = JSON.parse(argString && argString.length > 0 ? argString : "{}");
 let serviceName;
 let instanceName;
 let directServers;

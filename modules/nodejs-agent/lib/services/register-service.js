@@ -48,7 +48,7 @@ RegisterService.prototype.launch = function() {
                             host_name: os.hostname(),
                             process_no: process.pid + "",
                             language: "nodejs",
-                            ipV4s: getAllIPv4Address(),
+                            ipv4: getAllIPv4Address(),
                         },
                     }, function() {
                         logger.info("RegisterService", "Service[%s, %d] had register successfully.", agentConfig.getServiceName());
@@ -90,9 +90,9 @@ RegisterService.prototype.launch = function() {
         },
     ], function(err, result) {
         if (err) {
-            logger.error("RegisterService", "The service %s registed failed. Reason: %s", agentConfig.getServiceName(), err.message);
+            logger.error("RegisterService", "The service %s registered failed. Reason: %s", agentConfig.getServiceName(), err.message);
         } else {
-            logger.info("RegisterService", "The service %s has registered.");
+            logger.info("RegisterService", "The service %s has registered.", agentConfig.getServiceName());
         }
     });
 };
