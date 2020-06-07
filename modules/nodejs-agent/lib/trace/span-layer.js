@@ -16,7 +16,7 @@
  */
 "use strict";
 
-const TraceSegmentServiceParameters = require("../network/common/trace-common_pb");
+const TraceSegmentServiceParameters = require("../network/language-agent/Tracing_pb");
 
 /**
  *

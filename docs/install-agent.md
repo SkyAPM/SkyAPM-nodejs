@@ -14,6 +14,8 @@ require('skyapm-nodejs').start({
     // service's nodes share the same code.
     // this value cannot be empty.
     serviceName: 'test',
+    // The identifier of the instance
+    instanceName: 'test',
     // Collector agent_gRPC/grpc service addresses.
     // default value: localhost:11800
     directServers: 'localhost:11800'

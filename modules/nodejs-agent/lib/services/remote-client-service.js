@@ -20,13 +20,10 @@ const grpc = require("grpc");
 const async = require("async");
 const logger = require("../logger");
 const AgentConfig = require("../config");
-const Endpoint = require("../dictionary/endpoint");
-const Register = require("../network/register/Register_grpc_pb");
-const CommonParameteres = require("../network/common/common_pb");
-const RegisterParameteres = require("../network/register/Register_pb");
-const TracerSender = require("../network/language-agent-v2/trace_grpc_pb");
-const ServiceInstancePing = require("../network/register/InstancePing_grpc_pb");
-const ServiceInstancePingParameteres = require("../network/register/InstancePing_pb");
+const ManagementService = require("../network/management/Management_grpc_pb");
+const ManagementServiceParameter = require("../network/management/Management_pb");
+const TraceSendService = require("../network/language-agent/Tracing_grpc_pb");
+const CommonParameteres = require("../network/common/Common_pb");
 
 /**
  * @constructor
@@ -36,14 +33,8 @@ function RemoteClient() {
 };
 
 RemoteClient.prototype.connectRemote = function(directServer) {
-    this._register = new Register.RegisterClient(directServer,
-        grpc.credentials.createInsecure());
-    this._instancePinger = new ServiceInstancePing.ServiceInstancePingClient(
-        directServer,
-        grpc.credentials.createInsecure());
-    this._tracerSender = new TracerSender.TraceSegmentReportServiceClient(
-        directServer,
-        grpc.credentials.createInsecure());
+    this._managemenet = new ManagementService.ManagementServiceClient(directServer, grpc.credentials.createInsecure());
+    this._tracerSender = new TraceSendService.TraceSegmentReportServiceClient(directServer, grpc.credentials.createInsecure());
 };
 
 RemoteClient.prototype.launch = function() {
@@ -87,137 +78,16 @@ RemoteClient.prototype.sendTraceData = function(traces) {
     });
 };
 
-RemoteClient.prototype.registerNetwork = function(networkes, callback) {
+RemoteClient.prototype.reportInstanceProperties = function(serviceOptions, successCallback, callback) {
     let that = this;
 
-    let networkParameter = new RegisterParameteres.NetAddresses();
-    let networkesK = networkes.next();
-    while (!networkesK.done) {
-        let network = networkesK.value;
-        networkParameter.addAddresses(network);
-        networkesK = networkes.next();
-    }
-
-    let meta = new grpc.Metadata();
-    meta.add("Authentication", AgentConfig.getAuthentication());
-
-    this._register.doNetworkAddressRegister(networkParameter, meta,
-        function(err, response) {
-            if (err) {
-                logger.error("remote-client-service",
-                    "Failed to register network address. error message: %s",
-                    err.message);
-                that.dealWithError(err);
-            }
-
-            if (response && response.getAddressidsList().length > 0) {
-                let networkMapping = new Map();
-                response.getAddressidsList().forEach(function(mapping) {
-                    networkMapping.set(mapping.getKey(), mapping.getValue());
-                });
-
-                callback(networkMapping);
-            }
-        });
-};
-
-RemoteClient.prototype.registerEndpoint = function(endpoints, callback) {
-    let that = this;
-
-    let endpointsParameteres = new RegisterParameteres.Endpoints();
-    endpoints.forEach(function(endpoint) {
-        let endpointParameter = new RegisterParameteres.Endpoint();
-        endpointParameter.setServiceid(endpoint.serviceId());
-        endpointParameter.setEndpointname(endpoint.endpointName());
-
-        if (endpoint.isEntry()) {
-            endpointParameter.setFrom(CommonParameteres.DetectPoint.SERVER);
-        }
-
-        if (endpoint.isExit()) {
-            endpointParameter.setFrom(CommonParameteres.DetectPoint.CLIENT);
-        }
-
-        endpointsParameteres.addEndpoints(endpointParameter);
-    });
-
-    let meta = new grpc.Metadata();
-    meta.add("Authentication", AgentConfig.getAuthentication());
-
-    this._register.doEndpointRegister(endpointsParameteres, meta,
-        function(err, response) {
-            if (err) {
-                logger.error("remote-client-service",
-                    "Failed to register endpoints. error message: %s", err.message);
-                that.dealWithError(err);
-            }
-
-            if (response && response.getElementsList().length > 0) {
-                let endpointMapping = new Map();
-                response.getElementsList().forEach(function(mapping) {
-                    let isEntry = false;
-                    let isExit = false;
-
-                    if (mapping.getFrom() === CommonParameteres.DetectPoint.SERVER) {
-                        isEntry = true;
-                    }
-
-                    if (mapping.getFrom() === CommonParameteres.DetectPoint.CLIENT) {
-                        isExit = true;
-                    }
-
-                    endpointMapping.set(new Endpoint(mapping.getEndpointname(), isEntry, isExit), mapping.getEndpointid());
-                });
-
-                callback(endpointMapping);
-            }
-        });
-};
-
-RemoteClient.prototype.registerService = function(serviceName, successCallback, callback) {
-    let that = this;
-
-    let servicesParameter = new RegisterParameteres.Services();
-    let serviceParameter = new RegisterParameteres.Service();
-    serviceParameter.setServicename(serviceName);
-    servicesParameter.addServices(serviceParameter);
-
-    let meta = new grpc.Metadata();
-    meta.add("Authentication", AgentConfig.getAuthentication());
-
-    this._register.doServiceRegister(servicesParameter, meta, function(err, response) {
-        if (err) {
-            logger.error("remote-client-service", "Failed to register service name %s . error message: %s", serviceName,
-                err.message);
-            that.dealWithError(err);
-        }
-
-        if (response && response.getServicesList().length > 0) {
-            response.getServicesList().forEach(function(mapping) {
-                if (mapping.getKey() === serviceName) {
-                    successCallback(mapping.getValue());
-                }
-            });
-        }
-
-        callback();
-    });
-};
-
-RemoteClient.prototype.registerInstance = function(serviceId, opts, successCallback, callback) {
-    let that = this;
-
-    let serviceInstancesParameter = new RegisterParameteres.ServiceInstances();
-    let serviceInstanceParameter = new RegisterParameteres.ServiceInstance();
-
-    serviceInstanceParameter.setServiceid(serviceId);
-    serviceInstanceParameter.setInstanceuuid(opts.instanceUUID());
-    serviceInstanceParameter.setTime(new Date().getTime());
-
+    let instanceProperties = new ManagementServiceParameter.InstanceProperties();
+    instanceProperties.setServiceinstance(AgentConfig.getInstanceName());
+    instanceProperties.setService(AgentConfig.getInstanceName());
     let osInfoProperties = [];
-    Object.keys(opts.osInfo).forEach(function(value) {
-        if (opts.osInfo[value] instanceof Array) {
-            opts.osInfo[value].forEach(function(arrayValue) {
+    Object.keys(serviceOptions.osInfo).forEach(function(value) {
+        if (serviceOptions.osInfo[value] instanceof Array) {
+            serviceOptions.osInfo[value].forEach(function(arrayValue) {
                 let valueParameter = new CommonParameteres.KeyStringValuePair();
                 valueParameter.setKey(value);
                 valueParameter.setValue(arrayValue);
@@ -226,35 +96,26 @@ RemoteClient.prototype.registerInstance = function(serviceId, opts, successCallb
         } else {
             let valueParameter = new CommonParameteres.KeyStringValuePair();
             valueParameter.setKey(value);
-            valueParameter.setValue(opts.osInfo[value]);
+            valueParameter.setValue(serviceOptions.osInfo[value]);
             osInfoProperties.push(valueParameter);
         }
     });
-    serviceInstanceParameter.setPropertiesList(osInfoProperties);
-    serviceInstancesParameter.addInstances(serviceInstanceParameter);
+    instanceProperties.setPropertiesList(osInfoProperties);
 
     let meta = new grpc.Metadata();
     meta.add("Authentication", AgentConfig.getAuthentication());
-
-    this._register.doServiceInstanceRegister(serviceInstancesParameter, meta,
-        function(err, response) {
-            if (err) {
-                logger.error("remote-client-service", "Failed to register instance of service %s. error message: %s",
-                    AgentConfig.getServiceName(), err.message);
-                that.dealWithError(err);
-            }
-
-            if (response && response.getServiceinstancesList().length > 0) {
-                response.getServiceinstancesList().forEach(function(mapping) {
-                    if (mapping.getKey() === AgentConfig.instanceUUID()) {
-                        successCallback(mapping.getValue());
-                    }
-                });
-            }
-
-            callback();
-        });
+    this._managemenet.reportInstanceProperties(instanceProperties, meta, function(err, response) {
+        if (err) {
+            logger.error("remote-client-service", "Failed to register service name %s . error message: %s", AgentConfig.getServiceName(),
+                err.message);
+            that.dealWithError(err);
+        } else {
+            successCallback();
+        }
+        callback();
+    });
 };
+
 
 RemoteClient.prototype.initConnection = function(directServers) {
     this._directServers = directServers.split(",");
@@ -263,18 +124,14 @@ RemoteClient.prototype.initConnection = function(directServers) {
     this.connectRemote(this._directServers[this._nextDirectServersIndex]);
 };
 
-RemoteClient.prototype.sendHeartBeat = function(instanceId) {
+RemoteClient.prototype.keepAlive = function() {
     let that = this;
 
-    let instancePingPkg = new ServiceInstancePingParameteres.ServiceInstancePingPkg();
-    instancePingPkg.setServiceinstanceid(instanceId);
-    instancePingPkg.setTime(new Date().getTime());
-    instancePingPkg.setServiceinstanceuuid(AgentConfig.instanceUUID());
+    let instancePingPkg = new ManagementServiceParameter.InstancePingPkg();
+    instancePingPkg.setService(AgentConfig.getServiceName());
+    instancePingPkg.setServiceinstance(AgentConfig.getInstanceName());
 
-    let meta = new grpc.Metadata();
-    meta.add("Authentication", AgentConfig.getAuthentication());
-
-    this._instancePinger.doPing(instancePingPkg, meta, function(err, response) {
+    this._managemenet.keepAlive(instancePingPkg, function(err, response) {
         if (err) {
             logger.error("remote-client-service", "Failed to send heart beat of service %s.", AgentConfig.getServiceName());
             that.dealWithError(err);
