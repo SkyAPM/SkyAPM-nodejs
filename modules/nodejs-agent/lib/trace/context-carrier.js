@@ -40,8 +40,8 @@ ContextCarrier.prototype.serialize = function() {
     traceContextArray.push(Base64.encode(this._traceId));
     traceContextArray.push(Base64.encode(this._traceSegmentId));
     traceContextArray.push(this._spanId);
-    traceContextArray.push(this._parentService);
-    traceContextArray.push(this._parentServiceInstance);
+    traceContextArray.push(Base64.encode(this._parentService));
+    traceContextArray.push(Base64.encode(this._parentServiceInstance));
     traceContextArray.push(Base64.encode(this._parentEndpoint));
     traceContextArray.push(Base64.encode(this._addressUsedAtClient));
     return traceContextArray.join("-");
@@ -53,7 +53,7 @@ ContextCarrier.prototype.deserialize = function(traceContext) {
     }
 
     let traceContextSegment = traceContext.split("-");
-    if (traceContextSegment.length != 8) {
+    if (traceContextSegment.length !== 8) {
         return this;
     }
 

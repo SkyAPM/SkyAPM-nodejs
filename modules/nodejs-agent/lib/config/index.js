@@ -46,8 +46,8 @@ AgentConfig.prototype.setDirectServices = function(directServices) {
 
 
 AgentConfig.prototype.initConfig = function(agentOptions) {
-    this._serviceName = process.env.SW_SERVICE_NAME || (agentOptions && agentOptions.serviceName) || "You Application";
-    this._instanceName = process.env.SW_INSTANCE_NAME || (agentOptions && agentOptions.instanceName) || "You Instance";
+    this._serviceName = process.env.SW_SERVICE_NAME || (agentOptions && agentOptions.serviceName) || "Your Application";
+    this._instanceName = process.env.SW_INSTANCE_NAME || (agentOptions && agentOptions.instanceName) || "Your Instance";
     this._directServices = process.env.SW_DIRECT_SERVERS || (agentOptions && agentOptions.directServers) || "localhost:11800";
     this._authentication = process.env.SW_AUTHENTICATION || (agentOptions && agentOptions.authentication) || "";
 };
