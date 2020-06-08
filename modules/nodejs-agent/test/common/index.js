@@ -1,0 +1,60 @@
+/*
+ * Licensed to the SkyAPM under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+const wait = require("wait-until");
+const {spawn, exec} = require("child_process");
+
+const ifRebuild = process.env.BUILD !== "false";
+
+module.exports = {
+    /**
+     * Spawn the containers defined in [composeFile].
+     *
+     * @param {string} composeFile
+     * @param {function(function(boolean)): void} ready readiness callback.
+     * @return {Promise<void>}
+     */
+    setUp: (composeFile, ready) => new Promise((resolve, reject) => {
+        const options = ["--force-recreate", "-d"];
+        ifRebuild && options.push("--build");
+
+        const composeUp = spawn("docker-compose", ["-f", composeFile, "up", ...options]);
+
+        composeUp.stdout.on("data", (data) => process.stdout.write(data.toString()));
+        composeUp.stderr.on("data", (data) => process.stderr.write(data.toString()));
+
+        wait()
+            .times(200)
+            .interval(3000)
+            .condition(ready)
+            .done((result) => result ? resolve() : reject());
+    }),
+
+    /**
+     * Destroy the containers defined in [composeFile].
+     *
+     * @param {string} composeFile
+     * @return {Promise<void>}
+     */
+    tearDown: (composeFile) => new Promise((resolve, reject) => {
+        exec(`docker-compose -f ${composeFile} down`, (err, stdout, stderr) => {
+            console.info(stdout);
+            console.error(stderr);
+            resolve();
+        });
+    }),
+};

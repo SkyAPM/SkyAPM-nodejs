@@ -16,8 +16,6 @@
  */
 "use strict";
 
-const uuid = require("uuid/v4");
-
 /**
  *
  * @constructor
@@ -25,26 +23,13 @@ const uuid = require("uuid/v4");
  */
 function AgentConfig() {
     this._serviceName = undefined;
-    this._serviceId = undefined;
-    this._instanceId = undefined;
+    this._instanceName = undefined;
     this._directServices = undefined;
-    this._instanceUUID = undefined;
     this._authentication = undefined;
 };
 
-AgentConfig.prototype.getServiceId = function() {
-    return this._serviceId;
-};
-AgentConfig.prototype.setServiceId = function(applicationId) {
-    this._serviceId = applicationId;
-};
-
-AgentConfig.prototype.getInstanceId = function() {
-    return this._instanceId;
-};
-
-AgentConfig.prototype.setInstanceId = function(applicationInstanceId) {
-    this._instanceId = applicationInstanceId;
+AgentConfig.prototype.getInstanceName = function() {
+    return this._instanceName;
 };
 
 AgentConfig.prototype.getServiceName = function() {
@@ -60,14 +45,10 @@ AgentConfig.prototype.setDirectServices = function(directServices) {
 };
 
 
-AgentConfig.prototype.instanceUUID = function() {
-    return this._instanceUUID;
-};
-
 AgentConfig.prototype.initConfig = function(agentOptions) {
-    this._serviceName = process.env.SW_SERVICE_NAME || (agentOptions && agentOptions.serviceName) || "You Application";
+    this._serviceName = process.env.SW_SERVICE_NAME || (agentOptions && agentOptions.serviceName) || "Your Application";
+    this._instanceName = process.env.SW_INSTANCE_NAME || (agentOptions && agentOptions.instanceName) || "Your Instance";
     this._directServices = process.env.SW_DIRECT_SERVERS || (agentOptions && agentOptions.directServers) || "localhost:11800";
-    this._instanceUUID = agentOptions.instanceUUID || uuid();
     this._authentication = process.env.SW_AUTHENTICATION || (agentOptions && agentOptions.authentication) || "";
 };
 

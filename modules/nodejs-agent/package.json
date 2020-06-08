@@ -1,14 +1,15 @@
 {
   "name": "skyapm-nodejs",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "description": "The Node server instrument SDK for Apache SkyWalking",
   "main": "index.js",
   "scripts": {
     "prepare": "npm run check && npm run generate-source",
     "generate-source": "run-script-os",
-    "generate-source:win32": "rd lib/network && md lib/network && cd proto && grpc_tools_node_protoc --js_out=import_style=commonjs,binary:../lib/network/ --grpc_out=../lib/network/ common/*.proto language-agent-v2/*.proto register/*.proto",
-    "generate-source:darwin:linux": "rm -rf lib/network && mkdir -p lib/network && cd proto && grpc_tools_node_protoc --js_out=import_style=commonjs,binary:../lib/network/ --grpc_out=../lib/network/ common/*.proto language-agent-v2/*.proto register/*.proto",
-    "check": "eslint lib/ && eslint index.js"
+    "generate-source:win32": "rd lib/network && md lib/network && cd proto && grpc_tools_node_protoc --js_out=import_style=commonjs,binary:../lib/network/ --grpc_out=../lib/network/ common/*.proto language-agent/Tracing.proto management/*.proto",
+    "generate-source:darwin:linux": "rm -rf lib/network && mkdir -p lib/network && cd proto && grpc_tools_node_protoc --js_out=import_style=commonjs,binary:../lib/network/ --grpc_out=../lib/network/ common/*.proto language-agent/Tracing.proto management/*.proto",
+    "check": "eslint lib/ && eslint index.js",
+    "test": "mocha test/**/*.test.js --recursive"
   },
   "repository": {
     "type": "git",
@@ -43,23 +44,26 @@
     "on-finished": "^2.3.0",
     "randomatic": "^3.1.1",
     "resolve": "^1.8.1",
-    "semver": "^5.5.1",
-    "uuid": "^3.2.1"
+    "semver": "^5.5.1"
   },
   "devDependencies": {
+    "axios": "^0.19.2",
     "cz-conventional-changelog": "^2.1.0",
     "eslint": "^4.19.1",
     "eslint-config-google": "^0.9.1",
     "eslint-plugin-header": "^1.2.0",
     "grpc-tools": "1.7.1",
+    "mocha": "^7.2.0",
     "mysql": "^2.15.0",
     "require-self": "^0.2.1",
-    "run-script-os": "^1.0.3"
+    "run-script-os": "^1.0.3",
+    "wait-until": "0.0.2",
+    "yaml": "^1.10.0"
   },
   "eslintIgnore": [
     "lib/network/common/*.js",
-    "lib/network/language-agent-v2/*.js",
-    "lib/network/register/*.js"
+    "lib/network/language-agent/*.js",
+    "lib/network/management/*.js"
   ],
   "config": {
     "commitizen": {

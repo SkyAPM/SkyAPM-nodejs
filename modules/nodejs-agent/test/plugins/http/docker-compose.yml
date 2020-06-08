@@ -1,0 +1,74 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+version: '2.1'
+
+services:
+  collector:
+    extends:
+      file: ../../common/base-compose.yml
+      service: base_collector
+    networks:
+      - beyond
+
+  service-a:
+    build:
+      context: ../../..
+      dockerfile: test/plugins/http/Dockerfile.agent
+    ports:
+      - 3001:3001
+    networks:
+      - beyond
+    volumes:
+      - ./serverA.js:/app/index.js
+    environment:
+      SW_SERVICE_NAME: service-a
+      SW_INSTANCE_NAME: service-a
+      SW_DIRECT_SERVERS: collector:19876
+      DEBUG: skyapm:*
+    depends_on:
+      collector:
+        condition: service_healthy
+      service-b:
+        condition: service_healthy
+    entrypoint: ['node', '/app/index.js']
+
+  service-b:
+    build:
+      context: ../../..
+      dockerfile: test/plugins/http/Dockerfile.agent
+    networks:
+      - beyond
+    volumes:
+      - ./serverB.js:/app/index.js
+    environment:
+      SW_SERVICE_NAME: service-b
+      SW_INSTANCE_NAME: service-b
+      SW_DIRECT_SERVERS: collector:19876
+      DEBUG: skyapm:*
+    depends_on:
+      collector:
+        condition: service_healthy
+    entrypoint: ['node', '/app/index.js']
+    healthcheck:
+      test: ["CMD", "bash", "-c", "cat < /dev/null > /dev/tcp/127.0.0.1/3000"]
+      interval: 5s
+      timeout: 60s
+      retries: 120
+
+networks:
+  beyond:

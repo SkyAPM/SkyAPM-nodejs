@@ -21,9 +21,8 @@ module.exports = Span;
 const KeyValuePair = require("./key-value-pair");
 const LogDataEntity = require("./log-data-entity");
 
-const CommonParameteres = require("../network/common/common_pb");
-const TraceCommonParameteres = require("../network/common/trace-common_pb");
-const TraceSegmentParameteres = require("../network/language-agent-v2/trace_pb");
+const CommonParameteres = require("../network/common/Common_pb");
+const TraceSegmentParameteres = require("../network/language-agent/Tracing_pb");
 
 /**
  *
@@ -34,18 +33,15 @@ const TraceSegmentParameteres = require("../network/language-agent-v2/trace_pb")
  */
 function Span(spanOptions, traceContext) {
     this._operationName = spanOptions.operationName;
-    this._operationId = spanOptions.operationId;
     this._spanId = spanOptions.spanId;
     this._parentSpanId = spanOptions.parentSpanId;
     this._spanType = spanOptions.spanType;
-    this._peerId = spanOptions.peerId;
     this._peerHost = spanOptions.peerHost;
     this._startTime = undefined;
     this._endTime = undefined;
     this._isError = false;
     this._spanLayer = undefined;
     this._componentId = undefined;
-    this._componentName = undefined;
     this._refs = [];
     this._logs = [];
     this._traceContext = traceContext;
@@ -109,25 +105,16 @@ Span.prototype.spanLayer = function(spanLayer) {
     this._spanLayer = spanLayer;
 };
 
-Span.prototype.fetchPeerInfo = function(registerCallback, unregisterCallback) {
-    if (this._peerHost) {
-        return unregisterCallback(this._peerHost);
-    } else {
-        return registerCallback(this._peerId);
-    }
+Span.prototype.peerHost = function() {
+    return this._peerHost;
 };
 
 Span.prototype.errorOccurred = function() {
     this._isError = true;
 };
 
-Span.prototype.fetchOperationNameInfo = function(
-    registerCallback, unregisterCallback) {
-    if (this._operationName) {
-        return unregisterCallback(this._operationName);
-    } else {
-        return registerCallback(this._operationId);
-    }
+Span.prototype.operationName = function() {
+    return this._operationName;
 };
 
 Span.prototype.component = function(component) {
@@ -135,34 +122,28 @@ Span.prototype.component = function(component) {
 };
 
 Span.prototype.transform = function() {
-    let serializedSpan = new TraceSegmentParameteres.SpanObjectV2();
+    let serializedSpan = new TraceSegmentParameteres.SpanObject();
     serializedSpan.setSpanid(this._spanId);
     serializedSpan.setParentspanid(this._parentSpanId);
     serializedSpan.setStarttime(this._startTime);
     serializedSpan.setEndtime(this._endTime);
+    serializedSpan.setOperationname(this._operationName);
+    serializedSpan.setComponentid(this._componentId);
 
     this._refs.forEach(function(ref) {
         serializedSpan.addRefs(ref.transform());
     });
 
-    if (this._operationName) {
-        serializedSpan.setOperationname(this._operationName);
-    } else {
-        serializedSpan.setOperationnameid(this._operationId);
-    }
-
     if (this._peerHost) {
         serializedSpan.setPeer(this._peerHost);
-    } else if (this._peerId) {
-        serializedSpan.setPeerid(this._peerId);
     }
 
     if (this.isExitSpan()) {
-        serializedSpan.setSpantype(TraceCommonParameteres.SpanType.EXIT);
+        serializedSpan.setSpantype(TraceSegmentParameteres.SpanType.EXIT);
     } else if (this.isEntrySpan()) {
-        serializedSpan.setSpantype(TraceCommonParameteres.SpanType.ENTRY);
+        serializedSpan.setSpantype(TraceSegmentParameteres.SpanType.ENTRY);
     } else {
-        serializedSpan.setSpantype(TraceCommonParameteres.SpanType.LOCAL);
+        serializedSpan.setSpantype(TraceSegmentParameteres.SpanType.LOCAL);
     }
 
     serializedSpan.setIserror(this._isError);
@@ -184,12 +165,6 @@ Span.prototype.transform = function() {
         });
         serializedSpan.addLogs(serializedLog);
     });
-
-    if (this._componentName) {
-        serializedSpan.setComponent(this._componentName);
-    } else {
-        serializedSpan.setComponentid(this._componentId);
-    }
 
     if (this._spanLayer) {
         serializedSpan.setSpanlayer(this._spanLayer.getGrpcData());

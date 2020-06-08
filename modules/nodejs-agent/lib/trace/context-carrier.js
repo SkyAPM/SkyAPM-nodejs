@@ -19,25 +19,31 @@
 module.exports = ContextCarrier;
 
 const Base64 = require("js-base64").Base64;
-const SW_HEADER_KEY = "sw6";
+const SW_HEADER_KEY = "sw8";
 
 /**
  * @author zhang xin
  */
 function ContextCarrier() {
+    this._traceId = undefined;
+    this._traceSegmentId = undefined;
+    this._spanId = -1;
+    this._parentService = undefined;
+    this._parentServiceInstance = undefined;
+    this._parentEndpoint = undefined;
+    this._addressUsedAtClient = undefined;
 }
 
 ContextCarrier.prototype.serialize = function() {
     let traceContextArray = [];
     traceContextArray.push("1");
-    traceContextArray.push(Base64.encode(this._primaryDistributedTraceId));
+    traceContextArray.push(Base64.encode(this._traceId));
     traceContextArray.push(Base64.encode(this._traceSegmentId));
     traceContextArray.push(this._spanId);
-    traceContextArray.push(this._parentServiceInstanceId);
-    traceContextArray.push(this._entryServiceInstanceId);
-    traceContextArray.push(Base64.encode(this._peerHost));
-    traceContextArray.push(Base64.encode(this._entryEndpointName));
-    traceContextArray.push(Base64.encode(this._parentEndpointName));
+    traceContextArray.push(Base64.encode(this._parentService));
+    traceContextArray.push(Base64.encode(this._parentServiceInstance));
+    traceContextArray.push(Base64.encode(this._parentEndpoint));
+    traceContextArray.push(Base64.encode(this._addressUsedAtClient));
     return traceContextArray.join("-");
 };
 
@@ -47,26 +53,49 @@ ContextCarrier.prototype.deserialize = function(traceContext) {
     }
 
     let traceContextSegment = traceContext.split("-");
-    if (traceContextSegment.length != 9) {
+    if (traceContextSegment.length !== 8) {
         return this;
     }
 
-    this._primaryDistributedTraceId = Base64.decode(traceContextSegment[1]);
+    this._traceId = Base64.decode(traceContextSegment[1]);
     this._traceSegmentId = Base64.decode(traceContextSegment[2]);
     this._spanId = traceContextSegment[3];
-    this._parentServiceInstanceId = traceContextSegment[4];
-    this._entryServiceInstanceId = traceContextSegment[5];
-    this._peerHost = Base64.decode(traceContextSegment[6]);
-    this._entryEndpointName = Base64.decode(traceContextSegment[7]);
-    this._parentEndpointName = Base64.decode(traceContextSegment[8]);
+    this._parentService = traceContextSegment[4];
+    this._parentServiceInstance = traceContextSegment[5];
+    this._parentEndpoint = Base64.decode(traceContextSegment[6]);
+    this._addressUsedAtClient = Base64.decode(traceContextSegment[7]);
 };
 
-ContextCarrier.prototype.setTraceSegmentId = function(traceSegmentId) {
-    this._traceSegmentId = traceSegmentId;
+ContextCarrier.prototype.setAddressUsedAtClient = function(addressUsedAtClient) {
+    this._addressUsedAtClient = addressUsedAtClient;
 };
 
-ContextCarrier.prototype.getTraceSegmentId = function() {
-    return this._traceSegmentId;
+ContextCarrier.prototype.getAddressUsedAtClient = function() {
+    return this._addressUsedAtClient;
+};
+
+ContextCarrier.prototype.setParentEndpoint = function(parentEndpoint) {
+    this._parentEndpoint = parentEndpoint;
+};
+
+ContextCarrier.prototype.getParentEndpoint = function() {
+    return this._parentEndpoint;
+};
+
+ContextCarrier.prototype.setParentServiceInstance = function(parentServiceInstance) {
+    this._parentServiceInstance = parentServiceInstance;
+};
+
+ContextCarrier.prototype.getParentServiceInstance = function() {
+    return this._parentServiceInstance;
+};
+
+ContextCarrier.prototype.setParentService = function(parentService) {
+    this._parentService = parentService;
+};
+
+ContextCarrier.prototype.getParentService = function() {
+    return this._parentService;
 };
 
 ContextCarrier.prototype.setSpanId = function(spanId) {
@@ -77,88 +106,27 @@ ContextCarrier.prototype.getSpanId = function() {
     return this._spanId;
 };
 
-ContextCarrier.prototype.setParentApplicationInstanceId = function(parentApplicationInstanceId) {
-    this._parentServiceInstanceId = parentApplicationInstanceId;
+ContextCarrier.prototype.setTraceSegmentId = function(traceSegmentId) {
+    this._traceSegmentId = traceSegmentId;
 };
 
-ContextCarrier.prototype.getParentApplicationInstanceId = function() {
-    return this._parentServiceInstanceId;
+ContextCarrier.prototype.getTraceSegmentId = function() {
+    return this._traceSegmentId;
 };
 
-ContextCarrier.prototype.setEntryApplicationInstanceId = function(entryApplicationInstanceId) {
-    this._entryServiceInstanceId = entryApplicationInstanceId;
+ContextCarrier.prototype.setTraceId = function(traceId) {
+    this._traceId = traceId;
 };
 
-ContextCarrier.prototype.getEntryApplicationInstanceId = function() {
-    return this._entryServiceInstanceId;
-};
-
-ContextCarrier.prototype.setPeerHost = function(peerHost) {
-    this._peerHost = "#" + peerHost;
-};
-
-ContextCarrier.prototype.setPeerId = function(peerId) {
-    this._peerHost = peerId;
-};
-
-ContextCarrier.prototype.fetchPeerHostInfo = function(
-    registerCallback, unRegisterCallback) {
-    if (this._peerHost[0] == "#") {
-        return unRegisterCallback(this._peerHost.substr(1));
-    } else {
-        return registerCallback(this._peerHost);
-    }
-};
-
-ContextCarrier.prototype.setEntryOperationName = function(entryOperationName) {
-    this._entryEndpointName = "#" + entryOperationName;
-};
-
-ContextCarrier.prototype.fetchEntryOperationNameInfo = function(
-    registerCallback, unRegisterCallback) {
-    if (this._entryEndpointName[0] == "#") {
-        return unRegisterCallback(this._entryEndpointName.substr(1));
-    } else {
-        return registerCallback(this._entryEndpointName);
-    }
-};
-
-ContextCarrier.prototype.setEntryOperationId = function(entryOperationId) {
-    this._entryEndpointName = entryOperationId;
-};
-
-ContextCarrier.prototype.setParentOperationName = function(parentOperationName) {
-    this._parentEndpointName = "#" + parentOperationName;
-};
-
-ContextCarrier.prototype.fetchParentOperationNameInfo = function(
-    registerCallback, unRegisterCallback) {
-    if (this._parentEndpointName[0] == "#") {
-        return unRegisterCallback(this._parentEndpointName.substr(1));
-    } else {
-        return registerCallback(this._parentEndpointName);
-    }
-};
-
-ContextCarrier.prototype.setParentOperationId = function(parentOperationId) {
-    this._parentEndpointName = parentOperationId;
-};
-
-ContextCarrier.prototype.setPrimaryDistributedTraceId = function(primaryDistributedTraceId) {
-    this._primaryDistributedTraceId = primaryDistributedTraceId;
-};
-
-ContextCarrier.prototype.getPrimaryDistributedTraceId = function() {
-    return this._primaryDistributedTraceId;
+ContextCarrier.prototype.getTraceId = function() {
+    return this._traceId;
 };
 
 ContextCarrier.prototype.isInvalidate = function() {
-    return isEmpty(this._traceSegmentId) || isIllegalSegmentId(this._traceSegmentId) || isEmpty(this._spanId) ||
-        isEmpty(this._parentServiceInstanceId)
-        || isEmpty(this._entryServiceInstanceId) || isEmpty(this._peerHost) ||
-        isEmpty(this._entryEndpointName)
-        || isEmpty(this._parentEndpointName) ||
-        isEmpty(this._primaryDistributedTraceId);
+    return isEmpty(this._traceId) || isIllegalSegmentId(this._traceSegmentId) || isEmpty(this._spanId) ||
+        isEmpty(this._parentService)
+        || isEmpty(this._parentServiceInstance) || isEmpty(this._parentEndpoint) ||
+        isEmpty(this._addressUsedAtClient);
 
     /**
      *

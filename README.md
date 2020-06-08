@@ -11,9 +11,11 @@ SkyAPM Node.js is the Node.js instrumentation agent, which is compatible with [A
 
 ## Support List
 1. [Http](https://nodejs.org/api/http.html)
-2. [Mysql](https://github.com/mysqljs/mysql)
-3. [Egg](https://github.com/eggjs/egg)
+1. [Mysql](https://github.com/mysqljs/mysql)
+1. [Egg](https://github.com/eggjs/egg)
 
+## Plugin Test
+Read [plugin test](docs/PluginTest.md) if you want to contribute a new plugin to the community.
 
 # Contact Us
 * Submit an issue

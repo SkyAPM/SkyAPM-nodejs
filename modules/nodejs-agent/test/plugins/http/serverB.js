@@ -15,33 +15,21 @@
  * limitations under the License.
  */
 
-"use strict";
+require("skyapm-nodejs").start({});
 
-const argString = process.argv.slice(2);
-const args = JSON.parse(argString && argString.length > 0 ? argString : "{}");
-let serviceName;
-let instanceName;
-let directServers;
-let authentication;
-if (args.hasOwnProperty("sw_service_name")) {
-    serviceName = args["sw_service_name"];
-}
+const http = require("http");
+const port = 3000;
 
-if (args.hasOwnProperty("sw_instance_name")) {
-    instanceName = args["sw_instance_name"];
-}
+const requestHandler = (request, response) => {
+    response.end("test");
+};
 
-if (args.hasOwnProperty("sw_direct_Servers")) {
-    directServers = args["sw_direct_Servers"];
-}
+const serverB = http.createServer(requestHandler);
 
-if (args.hasOwnProperty("sw_authentication")) {
-    authentication = args["sw_authentication"];
-}
-
-require("skyapm-nodejs").start({
-    serviceName,
-    instanceName,
-    directServers,
-    authentication,
+serverB.listen(port, (err) => {
+    if (err) {
+        return console.log("something bad happened", err);
+    }
+    console.log(`server is listening on ${port}`);
 });
+

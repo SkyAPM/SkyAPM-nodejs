@@ -70,50 +70,13 @@ TraceContext.prototype.inject = function(contextCarrier) {
         return;
     }
 
-    let primaryDistributedTraceId = undefined;
-    let entryApplicationInstanceId = undefined;
-    let traceSegment = this._traceSegment;
-    this._traceSegment.fetchRefsInfo(function(refs) {
-        let firstSegmentRef = refs[0];
-
-        firstSegmentRef.fetchEntryOperationNameInfo(function(entryOperationId) {
-            contextCarrier.setEntryOperationId(entryOperationId);
-        }, function(entryOperationName) {
-            contextCarrier.setEntryOperationName(entryOperationName);
-        });
-
-        primaryDistributedTraceId = firstSegmentRef.getPrimaryDistributedTraceId();
-        entryApplicationInstanceId = firstSegmentRef.getEntryApplicationInstanceId();
-    }, function() {
-        traceSegment.fetchEntryOperationNameInfo(function(operationId) {
-            contextCarrier.setEntryOperationId(operationId);
-        }, function(operationName) {
-            contextCarrier.setEntryOperationName(operationName);
-        });
-
-        entryApplicationInstanceId = AgentConfig.getInstanceId();
-        primaryDistributedTraceId = traceSegment.traceSegmentId().encode();
-    });
-
-    this._span.fetchOperationNameInfo(function(operationId) {
-        contextCarrier.setParentOperationId(operationId);
-    }, function(operationName) {
-        contextCarrier.setParentOperationName(operationName);
-    });
-
-
-    this._span.fetchPeerInfo(function(peerId) {
-        contextCarrier.setPeerId(peerId);
-    }, function(peerHost) {
-        contextCarrier.setPeerHost(peerHost);
-    });
-
-    contextCarrier.setSpanId(this.spanId());
-    contextCarrier.setEntryApplicationInstanceId(entryApplicationInstanceId);
-    contextCarrier.setPrimaryDistributedTraceId(primaryDistributedTraceId);
     contextCarrier.setTraceSegmentId(this._traceSegment.traceSegmentId());
-    contextCarrier.setParentApplicationInstanceId(
-        AgentConfig.getInstanceId());
+    contextCarrier.setTraceId(this._traceSegment.traceId());
+    contextCarrier.setSpanId(this.spanId());
+    contextCarrier.setParentEndpoint(this._traceSegment.entryOperationName());
+    contextCarrier.setParentService(AgentConfig.getServiceName());
+    contextCarrier.setParentServiceInstance(AgentConfig.getInstanceName());
+    contextCarrier.setAddressUsedAtClient(this._span.peerHost());
 };
 
 TraceContext.prototype.extract = function(contextCarrier) {
