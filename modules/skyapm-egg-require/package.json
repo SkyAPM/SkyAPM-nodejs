@@ -1,6 +1,6 @@
 {
   "name": "skyapm-egg-require",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "The require module that skyapm nodejs agent enhance the egg framework",
   "main": "index.js",
   "scripts": {
