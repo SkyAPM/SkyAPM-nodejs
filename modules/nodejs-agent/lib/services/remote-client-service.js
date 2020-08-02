@@ -141,11 +141,13 @@ RemoteClient.prototype.keepAlive = function() {
 };
 
 RemoteClient.prototype.dealWithError = function(err) {
-    if (err.code == 14) {
+    if (err.code === 14) {
         let newCollector = this._directServers[(this._nextDirectServersIndex++ % this._directServers.length)];
         logger.info("remote-client-service", "Attempt to connection collector[%s]. because of the previous collector cannot connect.",
             newCollector);
         this.connectRemote(newCollector);
+    } else {
+        logger.info("remote-client-service", "Unknown error: %s", err);
     }
 };
 

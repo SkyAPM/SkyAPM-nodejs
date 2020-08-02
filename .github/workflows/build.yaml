@@ -14,14 +14,11 @@ jobs:
     timeout-minutes: 30
     strategy:
       matrix:
-        node-version: [8, 9]
+        node-version: [8, 9, 10]
     steps:
       - uses: actions/checkout@v2
-      - name: checkout submodules
-        shell: bash
-        run: |
-          git submodule sync --recursive
-          git -c protocol.version=2 submodule update --init --force --recursive --depth=1
+        with:
+          submodules: true
       - name: Cache node modules
         uses: actions/cache@v1
         with:
