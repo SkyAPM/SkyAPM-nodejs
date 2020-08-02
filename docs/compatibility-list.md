@@ -10,7 +10,7 @@ So you have two ways to resolve this problem. One is **download the compatible v
 | 0.1.x | 5.0.0-beta |
 | 0.3.0 | 5.0.0-RC |
 | 1.0.0 | 6.0.0-GA |
-| 2.0.0 | 8.0.0 |
+| 2.0.0 | 8.1.0 |
 
 
 ## Add your own component library
