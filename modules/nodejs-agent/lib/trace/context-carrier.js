@@ -40,8 +40,8 @@ ContextCarrier.prototype.serialize = function() {
     traceContextArray.push(Base64.encode(this._traceId));
     traceContextArray.push(Base64.encode(this._traceSegmentId));
     traceContextArray.push(this._spanId);
-    traceContextArray.push(this._parentService);
-    traceContextArray.push(this._parentServiceInstance);
+    traceContextArray.push(Base64.encode(this._parentService));
+    traceContextArray.push(Base64.encode(this._parentServiceInstance));
     traceContextArray.push(Base64.encode(this._parentEndpoint));
     traceContextArray.push(Base64.encode(this._addressUsedAtClient));
     return traceContextArray.join("-");
@@ -60,8 +60,8 @@ ContextCarrier.prototype.deserialize = function(traceContext) {
     this._traceId = Base64.decode(traceContextSegment[1]);
     this._traceSegmentId = Base64.decode(traceContextSegment[2]);
     this._spanId = traceContextSegment[3];
-    this._parentService = traceContextSegment[4];
-    this._parentServiceInstance = traceContextSegment[5];
+    this._parentService = Base64.decode(traceContextSegment[4]);
+    this._parentServiceInstance = Base64.decode(traceContextSegment[5]);
     this._parentEndpoint = Base64.decode(traceContextSegment[6]);
     this._addressUsedAtClient = Base64.decode(traceContextSegment[7]);
 };
