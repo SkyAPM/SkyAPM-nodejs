@@ -104,7 +104,11 @@ module.exports = function(httpModule, instrumentation, contextManager) {
             span.component(componentDefine.Components.HTTP);
             span.spanLayer(layerDefine.Layers.HTTP);
             let result = original.apply(this, arguments);
-            contextManager.finishSpan(span);
+            result.once("response", function(res) {
+              res.once("end", function() {
+                contextManager.finishSpan(span);
+              });
+            });
             return result;
         };
     }
