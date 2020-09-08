@@ -58,6 +58,7 @@ module.exports = function(httpModule, instrumentation, contextManager) {
     function wrapEmit(original) {
         return function(event, req, res) {
             if (event === "request") {
+                let originRes = res;
                 let contextCarrier = new ContextCarrier();
                 contextCarrier.fetchBy(function(key) {
                     if (req.headers.hasOwnProperty(key)) {
@@ -75,7 +76,7 @@ module.exports = function(httpModule, instrumentation, contextManager) {
                         span.log(err);
                     }
 
-                    if (this.statusCode > 400) {
+                    if (originRes.statusCode > 400) {
                         span.errorOccurred();
                     }
 
