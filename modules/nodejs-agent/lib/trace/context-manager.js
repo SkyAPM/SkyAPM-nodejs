@@ -48,6 +48,10 @@ ContextManager.prototype.finishSpan = function(span) {
     }
 };
 
+ContextManager.prototype.unActive = function(span) {
+    this.active(undefined);
+};
+
 ContextManager.prototype.active = function(traceContext) {
     this._activeTraceContext = traceContext;
 };

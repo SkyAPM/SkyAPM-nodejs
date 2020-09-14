@@ -83,7 +83,11 @@ module.exports = function(httpModule, instrumentation, contextManager) {
                     contextManager.finishSpan(span);
                 });
             }
-            return original.apply(this, arguments);
+            try {
+                return original.apply(this, arguments);
+            } finally {
+                contextManager.unActive();
+            }
         };
     }
 
