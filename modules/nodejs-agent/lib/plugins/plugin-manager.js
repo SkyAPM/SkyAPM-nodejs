@@ -19,7 +19,7 @@
 
 module.exports = PluginManager;
 const logger = require("../logger");
-const OFFICER_SUPPORTED_MODULE = ["mysql", "http", "egg-core", "egg"];
+const OFFICER_SUPPORTED_MODULE = ["mysql", "http", "egg-core", "egg", "amqp"];
 
 /**
  *
