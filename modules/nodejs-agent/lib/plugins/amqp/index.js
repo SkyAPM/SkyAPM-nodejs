@@ -24,14 +24,12 @@ module.exports = new Plugin("amqp-plugin", "amqp", [{
     _description: "Enhance all version of amqp module",
     _enhanceModules: ["amqp"],
     canEnhance: function(version, enhanceFile) {
-        console.log("==============amqp canEnhance enhanceFile:"+enhanceFile+"  version:"+version);
         if (this._enhanceModules.indexOf(enhanceFile) > -1) {
             return true;
         }
         return false;
     },
     getInterceptor: function(enhanceFile) {
-        console.log("==============amqp getInterceptor enhanceFile:"+enhanceFile);
         return require("./" + enhanceFile);
     },
 }]);
