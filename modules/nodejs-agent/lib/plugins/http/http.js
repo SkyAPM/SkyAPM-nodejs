@@ -76,7 +76,7 @@ module.exports = function(httpModule, instrumentation, contextManager) {
                         span.log(err);
                     }
 
-                    if (originRes.statusCode > 400) {
+                    if (originRes.statusCode >= 400) {
                         span.errorOccurred();
                     }
 
