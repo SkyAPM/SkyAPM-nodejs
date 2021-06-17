@@ -39,6 +39,7 @@ let Components = function() {
     this.HTTP = new OfficeComponent(2, "HTTP");
     this.MYSQL = new OfficeComponent(5, "MYSQL");
     this.EGG = new OfficeComponent(4003, "Egg");
+    this.AMQP = new OfficeComponent(4004, "AMQP");
 };
 
 Components.instance = null;
