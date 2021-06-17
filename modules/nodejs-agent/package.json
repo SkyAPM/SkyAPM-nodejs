@@ -3,6 +3,7 @@
   "version": "2.0.1",
   "description": "The Node server instrument SDK for Apache SkyWalking",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "prepare": "npm run check && npm run generate-source",
     "generate-source": "run-script-os",
