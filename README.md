@@ -1,8 +1,12 @@
-# SkyAPM Node.js
+# Apache SkyWalking provides official NodeJS Agent Implementation Noadays.
+
+Go to [skywalking-nodejs](https://github.com/apache/skywalking-nodejs) to get the latest releases.
+
+# ~~SkyAPM Node.js~~
 
 <img src="https://skyapmtest.github.io/page-resources/SkyAPM/skyapm.png" alt="Sky Walking logo" height="90px" align="right" />
 
-SkyAPM Node.js is the Node.js instrumentation agent, which is compatible with [Apache SkyWalking](https://github.com/apache/skywalking) backend and others compatible agents/SDKs.
+~~SkyAPM Node.js is the Node.js instrumentation agent, which is compatible with [Apache SkyWalking](https://github.com/apache/skywalking) backend and others compatible agents/SDKs.~~
 
 [![Build Status](https://github.com/SkyAPM/SkyAPM-nodejs/workflows/Build/badge.svg?branch=master)](https://github.com/SkyAPM/SkyAPM-nodejs/actions?query=branch%3Amaster+event%3Apush+workflow%3ABuild)
 
